@@ -19,7 +19,7 @@ public class Jumper : MonoBehaviour
 	{
 		if (Input.GetButtonDown ("Jump"))
 		{
-			subject.velocity = new Vector2 (subject.velocity.x, 1 * jumpVelocity);
+			subject.velocity = new Vector2 (subject.velocity.x, jumpVelocity);
 		}
 	}
 
