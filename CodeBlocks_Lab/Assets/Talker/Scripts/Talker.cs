@@ -39,7 +39,13 @@ public class Talker : MonoBehaviour
 
 					if (conversation.lines[i].Contains (forkSymbol))
 					{
-						textDisplay.text = "<fork>";
+						// Get the fork ID by removing every character starting from 3rd index
+						// This allows 3-digit fork IDs
+						// Eg: "001 <fork>" => "001"
+
+						string forkID = conversation.lines[i].Remove (3);
+
+						textDisplay.text = forkID;
 					}
 					else
 					{
