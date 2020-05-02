@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 537bff93319f14d719a18bbd5d615ec9, type: 3}
   m_Name: Conversation 00
   m_EditorClassIdentifier: 
-  lines: []
+  lines:
+  - Today has been a real good day.
+  - Or has it?
+  - <fork>
+  - Is something on your mind?
