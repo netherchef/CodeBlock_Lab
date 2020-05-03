@@ -4,21 +4,33 @@ using UnityEngine;
 using System.IO;
 
 [System.Serializable]
-public class JSON_Data
+public struct Data_Shell
 {
-	public string s;
+	public List<Data_Core> dataCores_STRICT;
+}
+
+[System.Serializable]
+public struct Data_Core
+{
+	public string data_STRICT;
 }
 
 public class JSONeer : MonoBehaviour
 {
-	private void Start ()
+	// Components
+
+	public Data_Shell dataShell;
+
+	// Variables
+
+	public string file = "DataList.json";
+
+	private void OnEnable ()
 	{
-		string path = Application.persistentDataPath + "/DataList.json";
+		string path = Application.persistentDataPath + "/" + file;
 
 		string jsonContent = File.ReadAllText (path);
 
-		JSON_Data d = JsonUtility.FromJson<JSON_Data> (jsonContent);
-
-		print (d.s);
+		dataShell = JsonUtility.FromJson<Data_Shell> (jsonContent);
 	}
 }

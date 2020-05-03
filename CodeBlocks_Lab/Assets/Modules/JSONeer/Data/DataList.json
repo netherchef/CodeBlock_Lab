@@ -1,0 +1,11 @@
+{
+	"dataCores_STRICT" :
+	[
+		{
+			"data_STRICT" : "BELOW"
+		},
+		{
+			"data_STRICT" : "ABOVE"
+		}
+	]
+}
