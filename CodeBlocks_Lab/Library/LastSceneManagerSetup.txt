@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Talker/Talker Scene.unity
+- path: Assets/Modules/JSONeer/JSONeer Scene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
