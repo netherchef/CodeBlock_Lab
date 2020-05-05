@@ -18,6 +18,8 @@ public class YarnspinnerIntegrater : MonoBehaviour
 
 	private void Start ()
 	{
+		// Add dialogue
+
 		dialogueRunner.Add (yarnProgram);
 	}
 
@@ -27,11 +29,15 @@ public class YarnspinnerIntegrater : MonoBehaviour
 		{
 			start = false;
 
+			// If dialogue is NOT running, start dialogue
+
 			if (!dialogueRunner.IsDialogueRunning)
 			{
 				dialogueRunner.StartDialogue ();
 			}
 		}
+
+		// Proceed to next dialogue line
 
 		if (dialogueRunner.IsDialogueRunning)
 		{
