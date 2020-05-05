@@ -7,26 +7,41 @@ public class Proximiter : MonoBehaviour
 	// Components
 
 	public Transform player;
-	public Transform[] npc;
+	public Transform[] targets;
+	public Transform closestTarget;
+
+	private float smallestDist;
 
 	// Variables
 
-	public float range = 1;
-	public bool check;
+	public bool findClosest;
 
 	private void Update ()
 	{
-		if (check)
+		if (findClosest)
 		{
-			check = false;
+			findClosest = false;
 
-			for (int n = 0; n < npc.Length; n++)
+			// Clear results from last check
+
+			closestTarget = null;
+			smallestDist = 0.0f;
+
+			// Go through all targets in the array.
+			// If the smallest distance recorded is 0, meaning it has NOT been changed,
+			// assign the current target's distance to it.
+			// If the next target's distance is smaller than the last recorded distance,
+			// assign the current target's distance to it.
+
+			for (int n = 0; n < targets.Length; n++)
 			{
-				float gap = (player.position - npc[n].position).magnitude;
+				float distance = (player.position - targets[n].position).magnitude;
 
-				if (gap < range)
+				if (smallestDist == 0.0f || distance < smallestDist)
 				{
-					print (gap);
+					smallestDist = distance;
+
+					closestTarget = targets[n];
 				}
 			}
 		}
