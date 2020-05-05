@@ -1,36 +1,76 @@
-﻿using System.Collections;
+﻿// JSONeer v0.015
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
+#region Structs ________________________________________________________________
+
 [System.Serializable]
-public struct Data_Shell
+public struct DataContainer
 {
-	public List<Data_Core> dataCores_STRICT;
+	public List<DataBranch> branchName_STRICT;
 }
 
 [System.Serializable]
-public struct Data_Core
+public struct DataBranch
 {
-	public string data_STRICT;
+	public string variableName_STRICT;
 }
+
+#endregion
 
 public class JSONeer : MonoBehaviour
 {
 	// Components
 
-	public Data_Shell dataShell;
+	public DataContainer container;
 
 	// Variables
 
-	public string file = "DataList.json";
+	public string fileName = "DataList.json";
+	public bool check;
 
-	private void OnEnable ()
+	private void Update ()
 	{
-		string path = Application.persistentDataPath + "/" + file;
+		if (check)
+		{
+			check = false;
 
-		string jsonContent = File.ReadAllText (path);
-
-		dataShell = JsonUtility.FromJson<Data_Shell> (jsonContent);
+			container = DataContainer_From_JSON ();
+		}
 	}
+
+	#region Functions __________________________________________________________
+
+	public DataContainer DataContainer_From_JSON ()
+	{
+		DataContainer output = new DataContainer ();
+
+		// Define JSON file path
+
+		string filePath = Application.persistentDataPath + "/" + fileName;
+
+		try
+		{
+			// Pull data from the JSON file as a string
+
+			string jsonContent = File.ReadAllText (filePath);
+
+			// Convert the string from JSON and load it into a struct
+
+			output = JsonUtility.FromJson<DataContainer> (jsonContent);
+		}
+		catch
+		{
+			Debug.LogWarning ("JSON file failed to load.");
+
+			return output;
+		}
+
+		return output;
+	}
+
+	#endregion
 }

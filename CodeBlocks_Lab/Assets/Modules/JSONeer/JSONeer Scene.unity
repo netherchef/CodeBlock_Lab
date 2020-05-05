@@ -232,9 +232,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ec889cf95a04dc1aef05f528c47f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataShell:
-    dataCores_STRICT: []
-  file: DataList.json
+  container:
+    branchName_STRICT: []
+  fileName: DataList.json
+  check: 0
 --- !u!4 &1043460472
 Transform:
   m_ObjectHideFlags: 0

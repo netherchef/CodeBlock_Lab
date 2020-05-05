@@ -1,11 +1,11 @@
 {
-	"dataCores_STRICT" :
+	"branchName_STRICT" :
 	[
 		{
-			"data_STRICT" : "BELOW"
+			"variableName_STRICT" : "BELOW"
 		},
 		{
-			"data_STRICT" : "ABOVE"
+      "variableName_STRICT": "ABOVE"
 		}
 	]
 }
