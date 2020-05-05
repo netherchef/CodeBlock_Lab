@@ -144,7 +144,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 278189278}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6157206, y: 0.58268017, z: -1.0517578}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1919237226}
@@ -179,7 +179,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 305078897}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.76, y: 1.11, z: 1.0517578}
+  m_LocalPosition: {x: 3.9657207, y: 3.66, z: 1.0517578}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 278189279}
@@ -242,7 +242,7 @@ GameObject:
   - component: {fileID: 997064456}
   - component: {fileID: 997064455}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Origin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -416,7 +416,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1269049919}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.4, y: -0.1, z: 1.0517578}
+  m_LocalPosition: {x: -4.1942797, y: 0.5226801, z: 1.0517578}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 278189279}
@@ -573,14 +573,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f8800412df2d420eaece1b8af89a598, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 997064454}
+  origin: {fileID: 997064454}
   targets:
   - {fileID: 1919237226}
   - {fileID: 305078898}
   - {fileID: 1269049920}
   closestTarget: {fileID: 0}
-  range: 1
+  furthestTarget: {fileID: 0}
   findClosest: 0
+  findFurthest: 0
 --- !u!4 &1897001282
 Transform:
   m_ObjectHideFlags: 0
@@ -621,7 +622,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1919237225}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.3842794, y: 0.41731983, z: 1.0517578}
+  m_LocalPosition: {x: 1.59, y: 1.04, z: 1.0517578}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 278189279}
