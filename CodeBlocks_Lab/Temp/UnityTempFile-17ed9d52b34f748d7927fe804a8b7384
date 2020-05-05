@@ -313,6 +313,7 @@
 "Assets/Modules/Fader/Scripts/SpriteFader.cs"
 "Assets/Modules/JSONeer/Scripts/JSONeer.cs"
 "Assets/Modules/Jumper/Scripts/Jumper.cs"
+"Assets/Modules/Mover/Scripts/Mover.cs"
 "Assets/Modules/Proximiter/Scripts/Proximiter.cs"
 "Assets/Modules/Talker/Scripts/Conversation.cs"
 "Assets/Modules/Talker/Scripts/Talker.cs"
