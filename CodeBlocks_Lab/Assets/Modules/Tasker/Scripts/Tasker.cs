@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class Tasker : MonoBehaviour
 {
-	 //Components
-	
+	//Components
+
 	[Header ("Check:")]
 	public Task currentTask;
 	public bool checking;
@@ -16,7 +16,7 @@ public class Tasker : MonoBehaviour
 	public Task newTask;
 	public bool createTask;
 
-	private void Update ()
+	private void Check_Create_Task ()
 	{
 		if (currentTask.active)
 		{
@@ -44,7 +44,5 @@ public class Tasker : MonoBehaviour
 
 			currentTask = newTask;
 		}
-
-
 	}
 }
