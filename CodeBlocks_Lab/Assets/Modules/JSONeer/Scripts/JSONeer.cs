@@ -5,22 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-#region Structs ________________________________________________________________
-
-[System.Serializable]
-public struct DataContainer
-{
-	public List<DataBranch> branchName_STRICT;
-}
-
-[System.Serializable]
-public struct DataBranch
-{
-	public string variableName_STRICT;
-}
-
-#endregion
-
 public class JSONeer : MonoBehaviour
 {
 	// Components
