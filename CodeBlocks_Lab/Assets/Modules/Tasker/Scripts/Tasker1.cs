@@ -12,17 +12,25 @@ public class Tasker1 : MonoBehaviour
 
 	private Task[] taskLibrary;
 
-	//private void Is_Task_Done ()
-	//{
-	//	// Check if the task has been done before
-	//}
+	private bool Task_Visited ()
+	{
+		// Check if the task has been done before,
+		// through the save file
 
-	//private void Begin (Task task)
-	//{
-	//	// Add task to Active Task List
+		return false;
+	}
 
-	//	activeTasks.Add (task);
-	//}
+	private void Begin ()
+	{
+		Add_To_ActiveTasks (Get_Task_From_Library (""));
+	}
+
+	private void Add_To_ActiveTasks (Task task)
+	{
+		// Add task to Active Task List
+
+		activeTasks.Add (task);
+	}
 
 	private bool Are_Reqs_Fulfilled (string taskName)
 	{
