@@ -12,11 +12,38 @@ public class Tasker1 : MonoBehaviour
 
 	public List<Task1> activeTasks;
 
-	private TaskLibrary taskLibrary;
+	public TaskLibrary taskLibrary;
+
+	// Variables
+
+	public string targetTask;
+
+	public bool beginTask;
+	public bool checkReqs;
 
 	private void Start ()
 	{
 		Load_TaskLibrary ();
+	}
+
+	private void Update ()
+	{
+		if (beginTask)
+		{
+			beginTask = false;
+
+			Begin (targetTask);
+		}
+
+		if (checkReqs)
+		{
+			checkReqs = false;
+
+			if (Reqs_Fulfilled (targetTask))
+			{
+				Remove_Task (targetTask);
+			}
+		}
 	}
 
 	private void Load_TaskLibrary ()
@@ -35,9 +62,27 @@ public class Tasker1 : MonoBehaviour
 		return false;
 	}
 
-	private void Begin ()
+	private void Begin (string taskName)
 	{
-		Add_To_ActiveTasks (Get_Task_From_Library (""));
+		if (taskName == "")
+		{
+			Debug.LogWarning ("No target task name given.");
+
+			return;
+		}
+
+		// Look for a matching task in the task library.
+		// If one is found, add a new blank task to the active list under the same name.
+
+		if (Get_Task_From_Library (taskName).name == taskName)
+		{
+			Task1 blankTask = new Task1 ()
+			{
+				name = taskName
+			};
+
+			Add_To_ActiveTasks (blankTask);
+		}
 	}
 
 	private void Add_To_ActiveTasks (Task1 task)
@@ -47,7 +92,7 @@ public class Tasker1 : MonoBehaviour
 		activeTasks.Add (task);
 	}
 
-	private bool Are_Reqs_Fulfilled (string taskName)
+	private bool Reqs_Fulfilled (string taskName)
 	{
 		Task1 activeTask = Find_ActiveTask (taskName);
 		Task1 libraryTask = Get_Task_From_Library (taskName);
@@ -91,6 +136,25 @@ public class Tasker1 : MonoBehaviour
 		Debug.LogWarning ("Task not found in library list.");
 
 		return default;
+	}
+
+	private void Remove_Task (string taskName)
+	{
+		// Look through active tasks and remove the task with a matching name
+
+		for (int t = 0; t < activeTasks.Count; t++)
+		{
+			if (activeTasks[t].name == taskName)
+			{
+				activeTasks.Remove (activeTasks[t]);
+
+				return;
+			}
+		}
+
+		// If no matching task is found, log warning
+
+		Debug.LogWarning ("Task not found in active list.");
 	}
 
 	//private void End ()
