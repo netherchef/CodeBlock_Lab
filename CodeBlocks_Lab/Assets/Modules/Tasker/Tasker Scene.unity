@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffaebcc548fec40ad80a08aed0e67a6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jsoneer: {fileID: 912521453}
   activeTasks: []
 --- !u!4 &759550892
 Transform:
