@@ -12,7 +12,7 @@ public class Tasker1 : MonoBehaviour
 
 	public List<Task1> activeTasks;
 
-	public TaskLibrary taskLibrary;
+	private TaskLibrary taskLibrary;
 
 	// Variables
 
@@ -54,19 +54,25 @@ public class Tasker1 : MonoBehaviour
 		taskLibrary = jsoneer.TaskLibrary_From_JSON ();
 	}
 
-	private bool Task_Visited ()
-	{
-		// Check if the task has been done before,
-		// through the save file
+	//private bool Task_Visited ()
+	//{
+	//	// Check if the task has been done before,
+	//	// through the save file
 
-		return false;
-	}
+	//	return false;
+	//}
 
 	private void Begin (string taskName)
 	{
 		if (taskName == "")
 		{
 			Debug.LogWarning ("No target task name given.");
+
+			return;
+		}
+		else if (taskName == Find_ActiveTask (taskName).name)
+		{
+			Debug.LogWarning ("Task already active.");
 
 			return;
 		}
@@ -94,6 +100,8 @@ public class Tasker1 : MonoBehaviour
 
 	private bool Reqs_Fulfilled (string taskName)
 	{
+		// Are the active task's variables identical to its library equivalent?
+
 		Task1 activeTask = Find_ActiveTask (taskName);
 		Task1 libraryTask = Get_Task_From_Library (taskName);
 
