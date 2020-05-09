@@ -1,4 +1,4 @@
-﻿// Tasker v0.016
+﻿// Tasker v0.017
 
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ public class Tasker : MonoBehaviour
 	public string targetTask;
 
 	public bool beginTask;
-	public bool checkReqs;
+	public bool endTask;
 
 	private void Start ()
 	{
@@ -35,23 +35,12 @@ public class Tasker : MonoBehaviour
 			Begin (targetTask);
 		}
 
-		if (checkReqs)
+		if (endTask)
 		{
-			checkReqs = false;
+			endTask = false;
 
-			if (Are_Reqs_Fulfilled (targetTask))
-			{
-				Remove_ActiveTask (targetTask);
-			}
+			Try_End (targetTask);
 		}
-	}
-
-	private void Load_TaskLibrary ()
-	{
-		// Pull the task library through JSONeer,
-		// and assign it to local task library
-
-		taskLibrary = jsoneer.TaskLibrary_From_JSON ();
 	}
 
 	//private bool Task_Visited ()
@@ -66,6 +55,8 @@ public class Tasker : MonoBehaviour
 
 	private void Begin (string taskName)
 	{
+		// Make sure a proper task name is specified. If not, log a warning.
+
 		if (taskName == "")
 		{
 			Debug.LogWarning ("No target task name given.");
@@ -115,27 +106,37 @@ public class Tasker : MonoBehaviour
 	{
 		// Find the task in the active list and make a copy
 
-		Task activeTask = Find_ActiveTask (taskName);
+		Task copy = Find_ActiveTask (taskName);
 
 		// Compare the input parameters with their equivalent in the copy.
 		// If a match is found, log a warning and return.
 
-		if (activeTask.a || activeTask.b || activeTask.c || activeTask.d || activeTask.e)
+		if (copy.a || copy.b || copy.c || copy.d || copy.e)
 		{
 			Debug.LogWarning (taskName + " | One or more requirements specified already added. Returning...");
 		}
 
-		// Update its values, remove the original from the active list, and put the copy back in.
+		// Update its values
 
-		activeTask.a = a;
-		activeTask.b = b;
-		activeTask.c = c;
-		activeTask.d = d;
-		activeTask.e = e;
+		copy.a = a;
+		copy.b = b;
+		copy.c = c;
+		copy.d = d;
+		copy.e = e;
 
-		Remove_ActiveTask (activeTask.name);
+		// Remove the original from the active list.
+		// If the task has not been fulfilled, add the copy back in.
 
-		Add_To_ActiveTasks (activeTask);
+		Remove_ActiveTask (copy.name);
+
+		if (Are_Reqs_Fulfilled (taskName))
+		{
+			print ("Task: " + taskName + " | Successfully ended.");
+
+			return;
+		}
+
+		Add_To_ActiveTasks (copy);
 	}
 
 	#endregion
@@ -175,24 +176,6 @@ public class Tasker : MonoBehaviour
 		return false;
 	}
 
-	#endregion
-
-	private Task Get_Task_From_Library (string taskName)
-	{
-		// Look through active tasks and return the task with a matching name
-
-		for (int t = 0; t < taskLibrary.tasks.Count; t++)
-		{
-			if (taskLibrary.tasks[t].name == taskName) return taskLibrary.tasks[t];
-		}
-
-		// If no matching task is found, log warning
-
-		Debug.LogWarning ("Task not found in library list.");
-
-		return default;
-	}
-
 	private void Remove_ActiveTask (string taskName)
 	{
 		// Look through active tasks and remove the task with a matching name
@@ -212,8 +195,73 @@ public class Tasker : MonoBehaviour
 		Debug.LogWarning ("Task not found in active list.");
 	}
 
-	//private void End ()
-	//{
-	//	// Add task name to save file
-	//}
+	#endregion
+
+	#region End ________________________________________________________________
+
+	public void Try_End (string taskName)
+	{
+		// Make sure a proper task name is specified. If not, log a warning.
+
+		if (taskName == "")
+		{
+			Debug.LogWarning ("No target task name given.");
+
+			return;
+		}
+		else if (!Task_Active (taskName))
+		{
+			Debug.LogWarning ("Task is not active active.");
+
+			return;
+		}
+
+		// If the task's requirements are fulfilled, remove it from the active list.
+		// If not, log a warning.
+
+		if (Are_Reqs_Fulfilled (taskName))
+		{
+			End_Task (taskName);
+
+			return;
+		}
+
+		Debug.LogWarning ("Task: " + taskName + " | End requirements not met.");
+	}
+
+	private void End_Task (string taskName)
+	{
+		Remove_ActiveTask (taskName);
+		print ("Task: " + taskName + " | Successfully ended.");
+	}
+
+	#endregion
+
+	#region Task Library _______________________________________________________
+
+	private void Load_TaskLibrary ()
+	{
+		// Pull the task library through JSONeer,
+		// and assign it to local task library
+
+		taskLibrary = jsoneer.TaskLibrary_From_JSON ();
+	}
+
+	private Task Get_Task_From_Library (string taskName)
+	{
+		// Look through active tasks and return the task with a matching name
+
+		for (int t = 0; t < taskLibrary.tasks.Count; t++)
+		{
+			if (taskLibrary.tasks[t].name == taskName) return taskLibrary.tasks[t];
+		}
+
+		// If no matching task is found, log warning
+
+		Debug.LogWarning ("Task not found in library list.");
+
+		return default;
+	}
+
+	#endregion
 }

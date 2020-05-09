@@ -197,7 +197,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &322694898
 BoxCollider2D:
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 322694894}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf5b154a7bfc54d258bbeb5255344fa7, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a6027e3c02274fe68b323cec4627489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tasker: {fileID: 759550891}
@@ -333,7 +333,7 @@ GameObject:
   - component: {fileID: 759550892}
   - component: {fileID: 759550891}
   m_Layer: 0
-  m_Name: Tasker1
+  m_Name: Tasker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -348,7 +348,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 759550890}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffaebcc548fec40ad80a08aed0e67a6f, type: 3}
+  m_Script: {fileID: 11500000, guid: e11b309d88bcb41b28bf192930e22465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   jsoneer: {fileID: 912521453}
@@ -368,65 +368,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &894600247
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 894600249}
-  - component: {fileID: 894600248}
-  m_Layer: 0
-  m_Name: Tasker
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &894600248
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 894600247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbcdad5ada9744f549fdb1661d685395, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentTask:
-    name: 
-    active: 0
-    complete: 0
-    requireA: 0
-    requireB: 0
-    requireC: 0
-  checking: 0
-  newTask:
-    name: 
-    active: 0
-    complete: 0
-    requireA: 0
-    requireB: 0
-    requireC: 0
-  createTask: 0
---- !u!4 &894600249
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 894600247}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &912521452
@@ -440,7 +381,7 @@ GameObject:
   - component: {fileID: 912521454}
   - component: {fileID: 912521453}
   m_Layer: 0
-  m_Name: Tasker1_JSONeer
+  m_Name: Tasker_JSONeer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,7 +396,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 912521452}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82f32819038af4fa9b9fc8100f9492fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d162760b4b004bb38d56c2a6022758a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   taskLibrary:
@@ -474,7 +415,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1813729816
 GameObject:
@@ -553,7 +494,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1813729820
 Rigidbody2D:
