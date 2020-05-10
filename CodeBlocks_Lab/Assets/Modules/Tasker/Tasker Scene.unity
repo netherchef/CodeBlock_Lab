@@ -355,7 +355,7 @@ MonoBehaviour:
   activeTasks: []
   targetTask: Task1
   beginTask: 0
-  checkReqs: 0
+  endTask: 0
 --- !u!4 &759550892
 Transform:
   m_ObjectHideFlags: 0

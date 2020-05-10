@@ -1,4 +1,4 @@
-﻿// Tasker v0.017
+﻿// Tasker v0.018
 
 using System.Collections;
 using System.Collections.Generic;
@@ -88,14 +88,13 @@ public class Tasker : MonoBehaviour
 
 	#region Check Task _________________________________________________________
 
-	private bool Are_Reqs_Fulfilled (string taskName)
+	private bool Are_Reqs_Fulfilled (Task task)
 	{
 		// Are the active task's variables identical to its library equivalent?
 
-		Task activeTask = Find_ActiveTask (taskName);
-		Task libraryTask = Get_Task_From_Library (taskName);
+		Task libraryTask = Get_Task_From_Library (task.name);
 
-		return Equals (activeTask, libraryTask);
+		return Equals (task, libraryTask);
 	}
 
 	#endregion
@@ -113,7 +112,7 @@ public class Tasker : MonoBehaviour
 
 		if (copy.a || copy.b || copy.c || copy.d || copy.e)
 		{
-			Debug.LogWarning (taskName + " | One or more requirements specified already added. Returning...");
+			Debug.LogWarning (copy.name + " | One or more requirements specified already added. Returning...");
 		}
 
 		// Update its values
@@ -124,19 +123,14 @@ public class Tasker : MonoBehaviour
 		copy.d = d;
 		copy.e = e;
 
-		// Remove the original from the active list.
-		// If the task has not been fulfilled, add the copy back in.
+		// Remove the original task from the active list.
 
 		Remove_ActiveTask (copy.name);
 
-		if (Are_Reqs_Fulfilled (taskName))
-		{
-			print ("Task: " + taskName + " | Successfully ended.");
+		// If the task is NOT complete, add put the copy back in.
 
-			return;
-		}
-
-		Add_To_ActiveTasks (copy);
+		if (Are_Reqs_Fulfilled (copy)) print ("Task: " + copy.name + " | Successfully ended.");
+		else Add_To_ActiveTasks (copy);
 	}
 
 	#endregion
@@ -166,7 +160,7 @@ public class Tasker : MonoBehaviour
 		return default;
 	}
 
-	private bool Task_Active (string taskName)
+	public bool Task_Active (string taskName)
 	{
 		for (int t = 0; t < activeTasks.Count; t++)
 		{
@@ -219,7 +213,7 @@ public class Tasker : MonoBehaviour
 		// If the task's requirements are fulfilled, remove it from the active list.
 		// If not, log a warning.
 
-		if (Are_Reqs_Fulfilled (taskName))
+		if (Are_Reqs_Fulfilled (Find_ActiveTask (taskName)))
 		{
 			End_Task (taskName);
 

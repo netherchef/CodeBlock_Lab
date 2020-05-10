@@ -10,10 +10,13 @@ public class Tasker_Participant : MonoBehaviour
 
 	// Variables
 
-	public string taskName;
+	public string taskName = "Task1";
 
 	private void OnTriggerEnter2D (Collider2D collision)
 	{
-		tasker.Fulfill_Task_Req (taskName, true, false, false, false, false);
+		if (tasker.Task_Active (taskName))
+		{
+			tasker.Fulfill_Task_Req (taskName, true, false, false, false, false);
+		}
 	}
 }
