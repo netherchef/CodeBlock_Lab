@@ -1,24 +1,18 @@
-﻿// Tooler v0.01
+﻿// Tooler v0.011
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ToolType
-{
-	A, B
-}
-
 public class Tooler : MonoBehaviour
 {
 	// Components
 
-	public Tool_A toolA;
-	public Tool_B tool_B;
+	public List<Transform> toolTargets;
 
 	// Variables
 
-	public ToolType toolType;
+	public ToolType equipped;
 
 	public bool useTool;
 
@@ -34,14 +28,19 @@ public class Tooler : MonoBehaviour
 
 	private void Use_Tool ()
 	{
-		switch (toolType)
+		for (int t = 0; t < toolTargets.Count; t++)
 		{
-			case ToolType.A:
-				toolA.Use ();
-				break;
-			case ToolType.B:
-				tool_B.Use ();
-				break;
+			// Find the first target that requires the tool equipped,
+			// and perform an action.
+
+			if (toolTargets[t].GetComponent<ToolTarget> ().require == equipped)
+			{
+				// Perform action
+
+				toolTargets[t].gameObject.SetActive (false);
+
+				return;
+			}
 		}
 	}
 }

@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tool_A : MonoBehaviour
+public class ToolTarget : MonoBehaviour
 {
-	public void Use ()
-	{
-		print ("HIYA");
-	}
+	public ToolType require;
 }
