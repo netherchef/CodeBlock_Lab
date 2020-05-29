@@ -311,6 +311,7 @@
 /define:CSHARP_7_3_OR_NEWER
 "Assets/Modules/Fader/Scripts/ImageFader.cs"
 "Assets/Modules/Fader/Scripts/SpriteFader.cs"
+"Assets/Modules/Follower/Follower.cs"
 "Assets/Modules/JSONeer/Scripts/JSON_Structs.cs"
 "Assets/Modules/JSONeer/Scripts/JSONeer.cs"
 "Assets/Modules/Jumper/Scripts/Jumper.cs"
