@@ -33,7 +33,7 @@ public class Follower : MonoBehaviour
 
 	#region Target _____________________________________________________________
 
-	private void Change_Target (Transform newTarget)
+	public void Change_Target (Transform newTarget)
 	{
 		target = newTarget;
 	}
@@ -42,7 +42,7 @@ public class Follower : MonoBehaviour
 
 	#region Speed ______________________________________________________________
 
-	private void Change_Speed (float newSpeed)
+	public void Change_Speed (float newSpeed)
 	{
 		speed = newSpeed;
 	}
