@@ -11,20 +11,11 @@ public class Follower : MonoBehaviour
 	public Transform follower;
 	public Transform target;
 
-	private Transform initialTarget;
-
 	// Variables
 
 	public float speed = 1;
 
 	public float zPosition;
-
-	private void Start ()
-	{
-		// Save initial target for target changing.
-
-		initialTarget = target;
-	}
 
 	private void Update ()
 	{
@@ -40,13 +31,21 @@ public class Follower : MonoBehaviour
 		}
 	}
 
+	#region Target _____________________________________________________________
+
 	private void Change_Target (Transform newTarget)
 	{
 		target = newTarget;
 	}
 
-	private void Reset_Target ()
+	#endregion
+
+	#region Speed ______________________________________________________________
+
+	private void Change_Speed (float newSpeed)
 	{
-		Change_Target (initialTarget);
+		speed = newSpeed;
 	}
+
+	#endregion
 }
