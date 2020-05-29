@@ -228,8 +228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64dd1e5289ab44f385b9fae38e1d596, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  follower: {fileID: 1804895801}
-  target: {fileID: 170136615}
+  followerObject: {fileID: 1804895801}
+  targetObject: {fileID: 170136615}
   speed: 1
   zPosition: -10
 --- !u!4 &447548759

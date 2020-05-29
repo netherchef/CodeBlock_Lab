@@ -8,8 +8,8 @@ public class Follower : MonoBehaviour
 {
 	// Components
 
-	public Transform followerObject;
-	public Transform targetObject;
+	public Transform follower;
+	public Transform target;
 
 	// Variables
 
@@ -18,11 +18,6 @@ public class Follower : MonoBehaviour
 	public float zPosition;
 
 	private void Update ()
-	{
-		Follow (followerObject, targetObject);
-	}
-
-	public void Follow (Transform follower, Transform target)
 	{
 		// If the follower is far from the target, 
 		// move the follower towards the target.
@@ -40,7 +35,7 @@ public class Follower : MonoBehaviour
 
 	public void Change_Target (Transform newTarget)
 	{
-		targetObject = newTarget;
+		target = newTarget;
 	}
 
 	#endregion
