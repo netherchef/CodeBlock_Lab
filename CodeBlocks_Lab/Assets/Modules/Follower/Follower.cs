@@ -11,9 +11,20 @@ public class Follower : MonoBehaviour
 	public Transform follower;
 	public Transform target;
 
+	private Transform initialTarget;
+
 	// Variables
 
 	public float speed = 1;
+
+	public float zPosition;
+
+	private void Start ()
+	{
+		// Save initial target for target changing.
+
+		initialTarget = target;
+	}
 
 	private void Update ()
 	{
@@ -24,9 +35,18 @@ public class Follower : MonoBehaviour
 		{
 			float x = -(follower.position.x - target.position.x);
 			float y = -(follower.position.y - target.position.y);
-			float z = follower.position.z;
 
-			follower.Translate (new Vector3 (x, y, z) * speed * Time.deltaTime);
+			follower.Translate (new Vector3 (x, y, zPosition) * speed * Time.deltaTime);
 		}
+	}
+
+	private void Change_Target (Transform newTarget)
+	{
+		target = newTarget;
+	}
+
+	private void Reset_Target ()
+	{
+		Change_Target (initialTarget);
 	}
 }
