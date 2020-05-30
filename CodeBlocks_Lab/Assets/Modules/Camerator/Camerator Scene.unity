@@ -289,6 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 108a825a798a9493aaf8439a6a46c4d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraEventType: 0
   follower: {fileID: 447548758}
   player: {fileID: 170136615}
   specialCameraTarget: {fileID: 1689206538}

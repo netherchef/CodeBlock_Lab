@@ -8,8 +8,8 @@ public class Follower : MonoBehaviour
 {
 	// Components
 
-	public Transform follower;
-	public Transform target;
+	public Transform followerObject;
+	public Transform targetObject;
 
 	// Variables
 
@@ -22,12 +22,12 @@ public class Follower : MonoBehaviour
 		// If the follower is far from the target, 
 		// move the follower towards the target.
 
-		if (Vector3.Magnitude (follower.position - target.position) > 1)
+		if (Vector3.Magnitude (followerObject.position - targetObject.position) > 1)
 		{
-			float x = -(follower.position.x - target.position.x);
-			float y = -(follower.position.y - target.position.y);
+			float x = -(followerObject.position.x - targetObject.position.x);
+			float y = -(followerObject.position.y - targetObject.position.y);
 
-			follower.Translate (new Vector3 (x, y, zPosition) * speed * Time.deltaTime);
+			followerObject.Translate (new Vector3 (x, y, zPosition) * speed * Time.deltaTime);
 		}
 	}
 
@@ -35,7 +35,7 @@ public class Follower : MonoBehaviour
 
 	public void Change_Target (Transform newTarget)
 	{
-		target = newTarget;
+		targetObject = newTarget;
 	}
 
 	#endregion
