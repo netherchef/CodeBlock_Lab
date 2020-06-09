@@ -1,4 +1,4 @@
-﻿// Scaler v0.01
+﻿// Scaler v0.02
 
 using System.Collections;
 using System.Collections.Generic;
@@ -14,67 +14,82 @@ public class Scaler : MonoBehaviour
 
 	// Variables
 
-	public Vector3 targetScale;
+	public float newTargetScale;
 	public bool setTargetScale;
 
 	public float speed = 1;
-
 	public bool scaling;
-
-	public bool changeScale;
+	public Vector3 targetScale;
 
 	public ScalerType scalerType;
 
+	private float initialScale = 1;
+
 	private void Update ()
 	{
-		if (changeScale)
+		if (!scaling)
 		{
-			switch (scalerType)
+			if (setTargetScale)
 			{
-				// Increase
+				setTargetScale = false;
 
-				case ScalerType.Increase:
-					target.localScale = Scale_Increase (target.localScale, speed);
-					break;
+				targetScale = new Vector3 (1, 1, 1) * newTargetScale;
 
-				// Decrease
+				if (target.localScale.x < targetScale.x || target.localScale.y < targetScale.y || target.localScale.z < targetScale.z)
+				{
+					scalerType = ScalerType.Increase;
+				}
+				else
+				{
+					scalerType = ScalerType.Decrease;
+				}
 
-				case ScalerType.Decrease:
+				newTargetScale = initialScale;
 
-					if (target.localScale.x <= 0 || target.localScale.y <= 0 || target.localScale.z <= 0)
-					{
-						print ("Breach!");
-
-						print (target.localScale);
-
-						target.localScale = new Vector3 (0, 0, 0);
-
-						changeScale = false;
-
-						return;
-					}
-
-					target.localScale = Scale_Decrease (target.localScale, speed);
-					break;
+				scaling = true;
 			}
+
+			return;
 		}
-	}
 
-	private void Set_Target_Scale (Vector3 targetScale)
-	{
+		switch (scalerType)
+		{
+			case ScalerType.Increase:
 
+				if (target.localScale.x < targetScale.x || target.localScale.y < targetScale.y || target.localScale.z < targetScale.z)
+				{
+					target.localScale = Scale_Increase (target.localScale, speed);
+				}
+				else
+				{
+					scaling = false;
+				}
+				break;
+
+			case ScalerType.Decrease:
+
+				if (target.localScale.x > targetScale.x || target.localScale.y > targetScale.y || target.localScale.z > targetScale.z)
+				{
+					target.localScale = Scale_Decrease (target.localScale, speed);
+				}
+				else
+				{
+					scaling = false;
+				}
+				break;
+		}
 	}
 
 	#region Increase & Decrease ________________________________________________
 
-	private Vector3 Scale_Increase (Vector3 currScale, float changeRate)
+	private Vector3 Scale_Increase (Vector3 currScale, float speed)
 	{
-		return currScale + new Vector3 (changeRate, changeRate, changeRate) * Time.deltaTime;
+		return currScale + new Vector3 (speed, speed, speed) * Time.deltaTime;
 	}
 
-	private Vector3 Scale_Decrease (Vector3 currScale, float changeRate)
+	private Vector3 Scale_Decrease (Vector3 currScale, float speed)
 	{
-		return currScale - new Vector3 (changeRate, changeRate, changeRate) * Time.deltaTime;
+		return currScale - new Vector3 (speed, speed, speed) * Time.deltaTime;
 	}
 
 	#endregion
