@@ -27,6 +27,8 @@ public class Scaler : MonoBehaviour
 
 	private void Update ()
 	{
+		// Determine scaler type
+
 		if (!scaling)
 		{
 			if (setTargetScale)
@@ -39,9 +41,13 @@ public class Scaler : MonoBehaviour
 				{
 					scalerType = ScalerType.Increase;
 				}
-				else
+				else if (target.localScale.x > targetScale.x || target.localScale.y > targetScale.y || target.localScale.z > targetScale.z)
 				{
 					scalerType = ScalerType.Decrease;
+				}
+				else
+				{
+					return;
 				}
 
 				newTargetScale = initialScale;
@@ -52,17 +58,26 @@ public class Scaler : MonoBehaviour
 			return;
 		}
 
+		// Perform scaling according to Scaler Type
+
 		switch (scalerType)
 		{
 			case ScalerType.Increase:
 
 				if (target.localScale.x < targetScale.x || target.localScale.y < targetScale.y || target.localScale.z < targetScale.z)
 				{
-					target.localScale = Scale_Increase (target.localScale, speed);
-				}
-				else
-				{
-					scaling = false;
+					Vector3 newScale = Scale_Increase (target.localScale, speed);
+
+					if (newScale.x > targetScale.x || newScale.y > targetScale.y || newScale.z > targetScale.z)
+					{
+						target.localScale = targetScale;
+
+						scaling = false;
+					}
+					else
+					{
+						target.localScale = Scale_Increase (target.localScale, speed);
+					}
 				}
 				break;
 
@@ -70,11 +85,18 @@ public class Scaler : MonoBehaviour
 
 				if (target.localScale.x > targetScale.x || target.localScale.y > targetScale.y || target.localScale.z > targetScale.z)
 				{
-					target.localScale = Scale_Decrease (target.localScale, speed);
-				}
-				else
-				{
-					scaling = false;
+					Vector3 newScale = Scale_Decrease (target.localScale, speed);
+
+					if (newScale.x < targetScale.x || newScale.y < targetScale.y || newScale.z < targetScale.z)
+					{
+						target.localScale = targetScale;
+
+						scaling = false;
+					}
+					else
+					{
+						target.localScale = Scale_Decrease (target.localScale, speed);
+					}
 				}
 				break;
 		}

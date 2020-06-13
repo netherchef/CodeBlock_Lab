@@ -227,8 +227,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 809790645}
+  newTargetScale: 0
+  setTargetScale: 0
   speed: 1
-  changeRate: 1
+  scaling: 0
+  targetScale: {x: 0, y: 0, z: 0}
   scalerType: 0
 --- !u!4 &1620895134
 Transform:
