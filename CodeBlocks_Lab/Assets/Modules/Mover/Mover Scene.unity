@@ -227,6 +227,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   subject: {fileID: 582361135}
+  moverType: 1
+  moveState: 0
   speed: 5
 --- !u!4 &725540070
 Transform:

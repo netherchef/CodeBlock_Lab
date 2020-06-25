@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Modules/Scaler/Scaler Scene.unity
+- path: Assets/Modules/Mover/Mover Scene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
