@@ -18,6 +18,7 @@ public class Mover : MonoBehaviour
 	public MoverType moverType;
 	public MoveState moveState;
 	public float speed = 1;
+	public float defaultSpeed = 1;
 
 	// Enumerators
 
@@ -122,4 +123,14 @@ public class Mover : MonoBehaviour
 	}
 
 	#endregion
+
+	public void Set_Speed (int newSpeed)
+	{
+		speed = newSpeed;
+	}
+
+	public void Reset_Speed ()
+	{
+		speed = defaultSpeed;
+	}
 }
