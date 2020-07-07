@@ -149,6 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14210121b18774f5a87ec6f7acadda0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cam: {fileID: 1989194454}
+  clone: {fileID: 5141157210157650108, guid: 6e34e26197e934823b6dad9540bc50b0, type: 3}
 --- !u!4 &1311334601
 Transform:
   m_ObjectHideFlags: 0

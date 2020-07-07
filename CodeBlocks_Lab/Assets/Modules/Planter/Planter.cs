@@ -6,6 +6,14 @@ using UnityEngine;
 
 public class Planter : MonoBehaviour
 {
+	// Components
+
+	public Camera cam;
+
+	// Variables
+
+	public GameObject clone;
+
 	private void Update ()
 	{
 		if (Input.GetMouseButtonDown (0))
@@ -16,6 +24,9 @@ public class Planter : MonoBehaviour
 
 	private void Plant ()
 	{
-		print ("Click!");
+		Vector3 mousePos = cam.ScreenToWorldPoint (Input.mousePosition);
+		Vector2 mousePos2d = new Vector2 (mousePos.x, mousePos.y);
+
+		Instantiate (clone, mousePos2d, Quaternion.identity);
 	}
 }
