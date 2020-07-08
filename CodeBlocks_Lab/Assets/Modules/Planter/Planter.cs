@@ -24,9 +24,12 @@ public class Planter : MonoBehaviour
 
 	private void Plant ()
 	{
-		Vector3 mousePos = cam.ScreenToWorldPoint (Input.mousePosition);
-		Vector2 mousePos2d = new Vector2 (mousePos.x, mousePos.y);
+		Instantiate (clone, Plant_Position (), Quaternion.identity, transform);
+	}
 
-		Instantiate (clone, mousePos2d, Quaternion.identity);
+	private Vector2 Plant_Position ()
+	{
+		Vector3 mousePos = cam.ScreenToWorldPoint (Input.mousePosition);
+		return new Vector2 (mousePos.x, mousePos.y);
 	}
 }
