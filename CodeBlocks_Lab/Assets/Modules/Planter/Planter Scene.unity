@@ -150,7 +150,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 1989194454}
-  clone: {fileID: 5141157210157650108, guid: 6e34e26197e934823b6dad9540bc50b0, type: 3}
+  clones:
+  - modeName: Box
+    prefab: {fileID: 5141157210157650108, guid: 6e34e26197e934823b6dad9540bc50b0,
+      type: 3}
+    hotkey: 98
+  - modeName: Soft Square
+    prefab: {fileID: 2548341634781913505, guid: e750cf3476963487eaccc3e4c4f41968,
+      type: 3}
+    hotkey: 99
+  currentMode: Box
 --- !u!4 &1311334601
 Transform:
   m_ObjectHideFlags: 0
