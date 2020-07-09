@@ -366,10 +366,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1989194454}
   modeDisplay: {fileID: 1959866026}
+  currentClone: {fileID: 0}
   clones:
   - modeName: Box
     prefabs:
     - {fileID: 5141157210157650108, guid: 6e34e26197e934823b6dad9540bc50b0, type: 3}
+    - {fileID: 5467075152917760554, guid: 31b5036d637a9454bb22bc7ed2ff6e35, type: 3}
     hotkey: 98
   - modeName: Soft Square
     prefabs:

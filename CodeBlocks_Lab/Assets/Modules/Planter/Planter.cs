@@ -20,11 +20,13 @@ public class Planter : MonoBehaviour
 	public Camera cam;
 	public Text modeDisplay;
 
-	private GameObject currentClone;
+	public GameObject currentClone;
 
 	// Variables
 
 	public Clone[] clones;
+
+	private int prefabIndex;
 
 	private string currentMode = "Box";
 
@@ -69,19 +71,54 @@ public class Planter : MonoBehaviour
 
 					currentMode = clones[c].modeName;
 
+					// Reset clone type index
+
+					prefabIndex = 0;
+
 					// Update the mode display
 
 					modeDisplay.text = currentMode;
 
-					// Destroy current clone
+					// Replace clone
 
-					Destroy (currentClone);
+					Replace_Clone (clones[c].prefabs[0]);
+				}
+			}
 
-					// Spawn clone
+			return;
+		}
 
-					GameObject clone = Instantiate (clones[c].prefabs[0], MousePosition (), Quaternion.identity, transform);
+		// Type
 
-					currentClone = clone;
+		if (Scroll_Up ())
+		{
+			for (int c = 0; c < clones.Length; c++)
+			{
+				if (clones[c].modeName == currentMode)
+				{
+					if (clones[c].prefabs.Length > prefabIndex + 1)
+					{
+						prefabIndex++;
+
+						Replace_Clone (clones[c].prefabs[prefabIndex]);
+					}
+				}
+			}
+
+			return;
+		}
+		else if (Scroll_Down ())
+		{
+			for (int c = 0; c < clones.Length; c++)
+			{
+				if (clones[c].modeName == currentMode)
+				{
+					if (prefabIndex > 0)
+					{
+						prefabIndex--;
+
+						Replace_Clone (clones[c].prefabs[prefabIndex]);
+					}
 				}
 			}
 
@@ -93,9 +130,34 @@ public class Planter : MonoBehaviour
 		if (currentClone) currentClone.transform.position = MousePosition ();
 	}
 
+	private void Replace_Clone (GameObject clone)
+	{
+		// Destroy current clone
+
+		Destroy (currentClone);
+
+		// Spawn clone
+
+		currentClone = Instantiate (clone, MousePosition (), Quaternion.identity, transform);
+	}
+
+	#region Mouse ______________________________________________________________
+
 	private Vector2 MousePosition ()
 	{
 		Vector3 mousePos = cam.ScreenToWorldPoint (Input.mousePosition);
 		return new Vector2 (mousePos.x, mousePos.y);
 	}
+
+	private bool Scroll_Up ()
+	{
+		return Input.mouseScrollDelta.y < 0;
+	}
+
+	private bool Scroll_Down ()
+	{
+		return Input.mouseScrollDelta.y > 0;
+	}
+
+	#endregion
 }
