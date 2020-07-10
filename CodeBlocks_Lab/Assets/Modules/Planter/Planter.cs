@@ -6,11 +6,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
-public struct Clone
+public struct Mode
 {
-	public string modeName;
-	public GameObject[] prefabs;
+	public string name;
 	public KeyCode hotkey;
+	public Type[] types;
+}
+
+[System.Serializable]
+public struct Type
+{
+	public string name;
+	public GameObject item;
 }
 
 public class Planter : MonoBehaviour
@@ -20,29 +27,35 @@ public class Planter : MonoBehaviour
 	public Camera cam;
 	public Text modeDisplay;
 
-	public GameObject currentClone;
+	private GameObject mouseHoverDisplay;
 
 	// Variables
 
-	public Clone[] clones;
+	public Mode[] modes;
 
-	private int prefabIndex;
+	private int currentTypeIndex;
 
-	private string currentMode = "Box";
+	private string currentMode;
 
 	private void Start ()
 	{
-		if (!currentClone)
+		if (!mouseHoverDisplay)
 		{
-			for (int c = 0; c < clones.Length; c++)
+			// Set the current mode
+
+			currentMode = modes[0].name;
+
+			// Update the mode display
+
+			modeDisplay.text = currentMode;
+
+			for (int c = 0; c < modes.Length; c++)
 			{
-				if (clones[c].modeName == currentMode)
+				if (modes[c].name == currentMode)
 				{
 					// Spawn clone
 
-					GameObject clone = Instantiate (clones[c].prefabs[0], MousePosition (), Quaternion.identity, transform);
-
-					currentClone = clone;
+					mouseHoverDisplay = Instantiate (modes[c].types[0].item, MousePosition (), Quaternion.identity, transform);
 				}
 			}
 		}
@@ -54,7 +67,21 @@ public class Planter : MonoBehaviour
 
 		if (Input.GetMouseButtonDown (0))
 		{
-			Instantiate (currentClone, MousePosition (), Quaternion.identity, transform);
+			GameObject newInstance = Instantiate (mouseHoverDisplay, MousePosition (), Quaternion.identity, transform);
+
+			try
+			{
+				Transform existingDirectory = GameObject.Find (currentMode).transform;
+
+				newInstance.transform.SetParent (existingDirectory);
+			}
+			catch
+			{
+				GameObject newDirectory = new GameObject (currentMode);
+				newDirectory.transform.SetParent (transform);
+
+				newInstance.transform.SetParent (newDirectory.transform);
+			}
 
 			return;
 		}
@@ -63,17 +90,17 @@ public class Planter : MonoBehaviour
 
 		if (Input.anyKeyDown)
 		{
-			for (int c = 0; c < clones.Length; c++)
+			for (int c = 0; c < modes.Length; c++)
 			{
-				if (Input.GetKeyDown (clones[c].hotkey))
+				if (Input.GetKeyDown (modes[c].hotkey))
 				{
 					// Change the current mode
 
-					currentMode = clones[c].modeName;
+					currentMode = modes[c].name;
 
 					// Reset clone type index
 
-					prefabIndex = 0;
+					currentTypeIndex = 0;
 
 					// Update the mode display
 
@@ -81,7 +108,7 @@ public class Planter : MonoBehaviour
 
 					// Replace clone
 
-					Replace_Clone (clones[c].prefabs[0]);
+					Replace_MouseDisplay (modes[c].types[0].item);
 				}
 			}
 
@@ -92,15 +119,15 @@ public class Planter : MonoBehaviour
 
 		if (Scroll_Up ())
 		{
-			for (int c = 0; c < clones.Length; c++)
+			for (int c = 0; c < modes.Length; c++)
 			{
-				if (clones[c].modeName == currentMode)
+				if (modes[c].name == currentMode)
 				{
-					if (clones[c].prefabs.Length > prefabIndex + 1)
+					if (modes[c].types.Length > currentTypeIndex + 1)
 					{
-						prefabIndex++;
+						currentTypeIndex++;
 
-						Replace_Clone (clones[c].prefabs[prefabIndex]);
+						Replace_MouseDisplay (modes[c].types[currentTypeIndex].item);
 					}
 				}
 			}
@@ -109,15 +136,15 @@ public class Planter : MonoBehaviour
 		}
 		else if (Scroll_Down ())
 		{
-			for (int c = 0; c < clones.Length; c++)
+			for (int c = 0; c < modes.Length; c++)
 			{
-				if (clones[c].modeName == currentMode)
+				if (modes[c].name == currentMode)
 				{
-					if (prefabIndex > 0)
+					if (currentTypeIndex > 0)
 					{
-						prefabIndex--;
+						currentTypeIndex--;
 
-						Replace_Clone (clones[c].prefabs[prefabIndex]);
+						Replace_MouseDisplay (modes[c].types[currentTypeIndex].item);
 					}
 				}
 			}
@@ -127,18 +154,18 @@ public class Planter : MonoBehaviour
 
 		// Position clone at mouse
 
-		if (currentClone) currentClone.transform.position = MousePosition ();
+		if (mouseHoverDisplay) mouseHoverDisplay.transform.position = MousePosition ();
 	}
 
-	private void Replace_Clone (GameObject clone)
+	private void Replace_MouseDisplay (GameObject clone)
 	{
 		// Destroy current clone
 
-		Destroy (currentClone);
+		Destroy (mouseHoverDisplay);
 
 		// Spawn clone
 
-		currentClone = Instantiate (clone, MousePosition (), Quaternion.identity, transform);
+		mouseHoverDisplay = Instantiate (clone, MousePosition (), Quaternion.identity, transform);
 	}
 
 	#region Mouse ______________________________________________________________

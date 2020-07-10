@@ -366,17 +366,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1989194454}
   modeDisplay: {fileID: 1959866026}
-  currentClone: {fileID: 0}
-  clones:
-  - modeName: Box
-    prefabs:
-    - {fileID: 5141157210157650108, guid: 6e34e26197e934823b6dad9540bc50b0, type: 3}
-    - {fileID: 5467075152917760554, guid: 31b5036d637a9454bb22bc7ed2ff6e35, type: 3}
+  modes:
+  - name: Point
     hotkey: 98
-  - modeName: Soft Square
-    prefabs:
-    - {fileID: 2548341634781913505, guid: e750cf3476963487eaccc3e4c4f41968, type: 3}
+    types:
+    - name: Box
+      item: {fileID: 5141157210157650108, guid: 6e34e26197e934823b6dad9540bc50b0,
+        type: 3}
+    - name: Arrow Down
+      item: {fileID: 5467075152917760554, guid: 31b5036d637a9454bb22bc7ed2ff6e35,
+        type: 3}
+  - name: Round
     hotkey: 99
+    types:
+    - name: Round Box
+      item: {fileID: 2548341634781913505, guid: e750cf3476963487eaccc3e4c4f41968,
+        type: 3}
 --- !u!4 &1311334601
 Transform:
   m_ObjectHideFlags: 0
