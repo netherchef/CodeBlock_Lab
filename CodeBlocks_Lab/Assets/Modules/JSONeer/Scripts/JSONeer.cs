@@ -1,4 +1,4 @@
-﻿// JSONeer v0.016
+﻿// JSONeer v0.017
 
 using System.Collections;
 using System.Collections.Generic;
@@ -15,18 +15,32 @@ public class JSONeer : MonoBehaviour
 
 	public string fileName = "DataList.json";
 	public bool check;
+	public bool write;
 
 	private void Update ()
 	{
+		// Read
+
 		if (check)
 		{
 			check = false;
 
 			container = DataContainer_From_JSON ();
+
+			return;
+		}
+
+		// Write
+
+		if (write)
+		{
+			write = false;
+
+			DataContainer_To_JSON ();
 		}
 	}
 
-	#region Functions __________________________________________________________
+	#region From JSON __________________________________________________________
 
 	public DataContainer DataContainer_From_JSON ()
 	{
@@ -58,6 +72,32 @@ public class JSONeer : MonoBehaviour
 			Debug.LogWarning ("JSON file failed to load.");
 
 			return default;
+		}
+	}
+
+	#endregion
+
+	#region To JSON ____________________________________________________________
+
+	private void DataContainer_To_JSON ()
+	{
+		// Define JSON file path
+
+		string filePath = Application.persistentDataPath + "/" + fileName;
+
+		try
+		{
+			// Format the struct as a JSON string
+
+			string jsonContent = JsonUtility.ToJson (container);
+
+			// Write the JSON string to persistent data
+
+			File.WriteAllText (filePath, jsonContent);
+		}
+		catch
+		{
+			Debug.LogWarning ("JSON file failed to write.");
 		}
 	}
 
