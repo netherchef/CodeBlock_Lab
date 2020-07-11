@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+#region Structs ________________________________________________________________
+
 [System.Serializable]
-public struct Mode
+public struct PlanterCategory
 {
 	public string name;
 	public KeyCode hotkey;
@@ -18,6 +20,8 @@ public struct Type
 {
 	public GameObject item;
 }
+
+#endregion
 
 public class Planter : MonoBehaviour
 {
@@ -31,11 +35,11 @@ public class Planter : MonoBehaviour
 
 	// Variables
 
-	public Mode[] modes;
+	public PlanterCategory[] categories;
 
 	private int currentTypeIndex;
 
-	private string currentMode;
+	private string currentCategory;
 
 	private void Start ()
 	{
@@ -45,19 +49,19 @@ public class Planter : MonoBehaviour
 		{
 			// Set the current mode
 
-			currentMode = modes[0].name;
+			currentCategory = categories[0].name;
 
 			// Update the mode display
 
-			modeDisplay.text = currentMode;
+			modeDisplay.text = currentCategory;
 
-			for (int c = 0; c < modes.Length; c++)
+			for (int c = 0; c < categories.Length; c++)
 			{
-				if (modes[c].name == currentMode)
+				if (categories[c].name == currentCategory)
 				{
 					// Spawn clone
 
-					mouseHoverDisplay = Instantiate (modes[c].types[0].item, MousePosition (), Quaternion.identity, transform);
+					mouseHoverDisplay = Instantiate (categories[c].types[0].item, MousePosition (), Quaternion.identity, transform);
 				}
 			}
 		}
@@ -73,13 +77,13 @@ public class Planter : MonoBehaviour
 
 			try
 			{
-				Transform existingDirectory = GameObject.Find (currentMode).transform;
+				Transform existingDirectory = GameObject.Find (currentCategory).transform;
 
 				newInstance.transform.SetParent (existingDirectory);
 			}
 			catch
 			{
-				GameObject newDirectory = new GameObject (currentMode);
+				GameObject newDirectory = new GameObject (currentCategory);
 				newDirectory.transform.SetParent (container.transform);
 
 				newInstance.transform.SetParent (newDirectory.transform);
@@ -92,13 +96,13 @@ public class Planter : MonoBehaviour
 
 		if (Input.anyKeyDown)
 		{
-			for (int c = 0; c < modes.Length; c++)
+			for (int c = 0; c < categories.Length; c++)
 			{
-				if (Input.GetKeyDown (modes[c].hotkey))
+				if (Input.GetKeyDown (categories[c].hotkey))
 				{
 					// Change the current mode
 
-					currentMode = modes[c].name;
+					currentCategory = categories[c].name;
 
 					// Reset clone type index
 
@@ -106,11 +110,11 @@ public class Planter : MonoBehaviour
 
 					// Update the mode display
 
-					modeDisplay.text = currentMode;
+					modeDisplay.text = currentCategory;
 
 					// Replace clone
 
-					Replace_MouseDisplay (modes[c].types[0].item);
+					Replace_MouseDisplay (categories[c].types[0].item);
 				}
 			}
 
@@ -121,15 +125,15 @@ public class Planter : MonoBehaviour
 
 		if (Scroll_Up ())
 		{
-			for (int c = 0; c < modes.Length; c++)
+			for (int c = 0; c < categories.Length; c++)
 			{
-				if (modes[c].name == currentMode)
+				if (categories[c].name == currentCategory)
 				{
-					if (modes[c].types.Length > currentTypeIndex + 1)
+					if (categories[c].types.Length > currentTypeIndex + 1)
 					{
 						currentTypeIndex++;
 
-						Replace_MouseDisplay (modes[c].types[currentTypeIndex].item);
+						Replace_MouseDisplay (categories[c].types[currentTypeIndex].item);
 					}
 				}
 			}
@@ -138,15 +142,15 @@ public class Planter : MonoBehaviour
 		}
 		else if (Scroll_Down ())
 		{
-			for (int c = 0; c < modes.Length; c++)
+			for (int c = 0; c < categories.Length; c++)
 			{
-				if (modes[c].name == currentMode)
+				if (categories[c].name == currentCategory)
 				{
 					if (currentTypeIndex > 0)
 					{
 						currentTypeIndex--;
 
-						Replace_MouseDisplay (modes[c].types[currentTypeIndex].item);
+						Replace_MouseDisplay (categories[c].types[currentTypeIndex].item);
 					}
 				}
 			}

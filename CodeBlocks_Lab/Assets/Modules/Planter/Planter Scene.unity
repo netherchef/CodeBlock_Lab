@@ -236,6 +236,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 228266526}
   m_CullTransparentMesh: 0
+--- !u!1 &971025577
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 971025579}
+  - component: {fileID: 971025578}
+  m_Layer: 0
+  m_Name: Planter_Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &971025578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971025577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 201210bc6e36c435abaab32d51316e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planter: {fileID: 1311334600}
+  planter_JSONeer: {fileID: 1518730835}
+  container: {fileID: 1115090821}
+  spawn: 0
+--- !u!4 &971025579
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971025577}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1041264861
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,7 +444,7 @@ MonoBehaviour:
   cam: {fileID: 1989194454}
   modeDisplay: {fileID: 1959866026}
   container: {fileID: 1115090821}
-  modes:
+  categories:
   - name: Point
     hotkey: 98
     types:
@@ -456,11 +503,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planter: {fileID: 1311334600}
-  modes: []
+  container:
+    categories:
+    - name: Point
+      plants:
+      - name: Box
+        position: {x: -3.4210463, y: 1.6233426}
+      - name: Box
+        position: {x: -1.6367188, y: -0.22017032}
+      - name: Box
+        position: {x: -0.10393004, y: -1.4289773}
+      - name: Box
+        position: {x: 1.3734616, y: -0.09907663}
+      - name: Arrow Down
+        position: {x: 2.6303265, y: 1.3866001}
+      - name: Arrow Down
+        position: {x: 1.2014673, y: 2.345289}
+      - name: Arrow Down
+        position: {x: 0.14547873, y: 0.42057276}
+      - name: Arrow Down
+        position: {x: 8.4012785, y: -0.85594237}
+      - name: Arrow Down
+        position: {x: 7.3379498, y: -1.4492188}
+      - name: Arrow Down
+        position: {x: 5.822798, y: -1.471946}
+      - name: Arrow Down
+        position: {x: 3.9562023, y: -1.5546876}
+      - name: Arrow Down
+        position: {x: 3.8262308, y: -2.9532433}
+      - name: Box
+        position: {x: -1.6748344, y: 3.1029832}
+      - name: Box
+        position: {x: -1.2156724, y: 1.6068894}
+      - name: Box
+        position: {x: -0.7634943, y: 1.4837831}
+    - name: Round
+      plants:
+      - name: Round Box
+        position: {x: 1.6502129, y: -0.73615044}
+      - name: Round Box
+        position: {x: -0.20714971, y: -1.3674241}
+      - name: Round Box
+        position: {x: -3.138021, y: -2.6170692}
+      - name: Round Box
+        position: {x: -3.9546635, y: -1.4882812}
   fileName: Plants.json
   pullContainer: 0
   pullPersistent: 0
   writePersistent: 0
+  trailingSuffix: (Clone)(Clone)
 --- !u!4 &1518730836
 Transform:
   m_ObjectHideFlags: 0

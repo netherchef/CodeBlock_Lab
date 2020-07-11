@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
+#region Structs ________________________________________________________________
+
 [System.Serializable]
 public struct Container
 {
@@ -22,9 +24,10 @@ public struct Category
 public struct Plant
 {
 	public string name;
-	public float x;
-	public float y;
+	public Vector2 position;
 }
+
+#endregion
 
 [ExecuteInEditMode]
 public class Planter_JSONeer : MonoBehaviour
@@ -118,8 +121,7 @@ public class Planter_JSONeer : MonoBehaviour
 				Plant plant = new Plant
 				{
 					name = correctName,
-					x = currPlantedObject.position.x,
-					y = currPlantedObject.position.y
+					position = currPlantedObject.position
 			};
 
 				plantList.Add (plant);
