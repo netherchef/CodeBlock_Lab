@@ -6,18 +6,17 @@ using UnityEngine;
 using System.IO;
 
 [System.Serializable]
-public struct Mode_JSON
+public struct Category
 {
 	public string name;
-	public List<Type_JSON> types;
+	public List<Plant> types;
 }
 
 [System.Serializable]
-public struct Type_JSON
+public struct Plant
 {
 	public string name;
-	public float xPos;
-	public float yPos;
+	public Vector2 position;
 }
 
 public class Planter_JSONeer : MonoBehaviour
@@ -25,7 +24,7 @@ public class Planter_JSONeer : MonoBehaviour
 	// Components
 
 	public Planter planter;
-	public List<Mode_JSON> modes;
+	public List<Category> categories;
 
 	// Variables
 
@@ -42,7 +41,7 @@ public class Planter_JSONeer : MonoBehaviour
 		{
 			pullContainer = false;
 
-			modes = Modes_From_Planter ();
+			categories = Categories_From_Planter ();
 
 			return;
 		}
@@ -53,7 +52,7 @@ public class Planter_JSONeer : MonoBehaviour
 		{
 			pullPersistent = false;
 
-			modes = DataContainer_From_JSON ();
+			categories = DataContainer_From_JSON ();
 
 			return;
 		}
@@ -68,63 +67,62 @@ public class Planter_JSONeer : MonoBehaviour
 		}
 	}
 
-	private List<Mode_JSON> Modes_From_Planter ()
+	private List<Category> Categories_From_Planter ()
 	{
-		// Main Mode Container
+		// Main Category List
 
-		List<Mode_JSON> modesFromPlanter = new List<Mode_JSON> ();
+		List<Category> categoriesFromPlanter = new List<Category> ();
 
 		// Make a copy of the main container holding all the goodies
 
 		GameObject container = planter.container;
 
 		// The container holds multiple Parents.
-		// These parent transforms hold the planted objects.
+		// These Parent transforms hold the Planted Objects.
 
 		for (int m = 0; m < container.transform.childCount; m++)
 		{
 			// For each Parent:
-			// Create a new Mode, and name it after the current Parent.
-			// Create a new Type list.
+			// Create a Category, and name it after the current Parent.
+			// Create a new Plant list.
 
-			Mode_JSON currMode = new Mode_JSON
+			Category currCategory = new Category
 			{
 				name = container.transform.GetChild (m).name
 			};
 
-			List<Type_JSON> newType = new List<Type_JSON> ();
+			List<Plant> plantList = new List<Plant> ();
 
 			for (int c = 0; c < container.transform.GetChild (m).childCount; c++)
 			{
-				// For each of the planted objects:
-				// Create a new Type, and grab its values from the current planted object.
-				// Add the new Type to the Type list.
+				// For each of the Planted Objects:
+				// Create a new Plant, and grab its values from the current Planted Object.
+				// Add the new Plant to the Plant list.
 
 				Transform currPlantedObject = container.transform.GetChild (m).GetChild (c);
 
-				Type_JSON currType = new Type_JSON
+				Plant plant = new Plant
 				{
 					name = currPlantedObject.name,
-					xPos = currPlantedObject.position.x,
-					yPos = currPlantedObject.position.y
+					position = currPlantedObject.position
 				};
 
-				newType.Add (currType);
+				plantList.Add (plant);
 			}
 
-			// Add the Type list to the new Mode, and add the new Mode to the Main Mode Container.
+			// Add the Type list to the new Mode, and add the new Mode to the Main Category List.
 
-			currMode.types = newType;
+			currCategory.types = plantList;
 
-			modesFromPlanter.Add (currMode);
+			categoriesFromPlanter.Add (currCategory);
 		}
 
-		return modesFromPlanter;
+		return categoriesFromPlanter;
 	}
 
 	#region From JSON __________________________________________________________
 
-	public List<Mode_JSON> DataContainer_From_JSON ()
+	public List<Category> DataContainer_From_JSON ()
 	{
 		// Define JSON file path
 
@@ -140,7 +138,7 @@ public class Planter_JSONeer : MonoBehaviour
 			{
 				// Convert the string from JSON and load it into a struct
 
-				return JsonUtility.FromJson<List<Mode_JSON>> (jsonContent);
+				return JsonUtility.FromJson<List<Category>> (jsonContent);
 			}
 			catch
 			{
@@ -171,7 +169,7 @@ public class Planter_JSONeer : MonoBehaviour
 		{
 			// Format the struct as a JSON string
 
-			string jsonContent = JsonUtility.ToJson (modes);
+			string jsonContent = JsonUtility.ToJson (categories);
 
 			// Write the JSON string to persistent data
 
