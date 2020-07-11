@@ -16,7 +16,6 @@ public struct Mode
 [System.Serializable]
 public struct Type
 {
-	public string name;
 	public GameObject item;
 }
 
@@ -26,6 +25,7 @@ public class Planter : MonoBehaviour
 
 	public Camera cam;
 	public Text modeDisplay;
+	public GameObject container;
 
 	private GameObject mouseHoverDisplay;
 
@@ -39,6 +39,8 @@ public class Planter : MonoBehaviour
 
 	private void Start ()
 	{
+		// On game start, activate an arbitrary mode
+
 		if (!mouseHoverDisplay)
 		{
 			// Set the current mode
@@ -78,7 +80,7 @@ public class Planter : MonoBehaviour
 			catch
 			{
 				GameObject newDirectory = new GameObject (currentMode);
-				newDirectory.transform.SetParent (transform);
+				newDirectory.transform.SetParent (container.transform);
 
 				newInstance.transform.SetParent (newDirectory.transform);
 			}
