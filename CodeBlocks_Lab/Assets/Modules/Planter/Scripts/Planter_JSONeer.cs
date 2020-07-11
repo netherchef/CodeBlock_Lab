@@ -9,7 +9,7 @@ using System.IO;
 public struct Category
 {
 	public string name;
-	public List<Plant> types;
+	public List<Plant> plants;
 }
 
 [System.Serializable]
@@ -32,6 +32,8 @@ public class Planter_JSONeer : MonoBehaviour
 	public bool pullContainer;
 	public bool pullPersistent;
 	public bool writePersistent;
+
+	public string trailingSuffix = "(Clone)(Clone)";
 
 	private void Update ()
 	{
@@ -101,9 +103,13 @@ public class Planter_JSONeer : MonoBehaviour
 
 				Transform currPlantedObject = container.transform.GetChild (m).GetChild (c);
 
+				int count = currPlantedObject.name.Length - trailingSuffix.Length;
+
+				string correctName = currPlantedObject.name.Remove (count);
+
 				Plant plant = new Plant
 				{
-					name = currPlantedObject.name,
+					name = correctName,
 					position = currPlantedObject.position
 				};
 
@@ -112,7 +118,7 @@ public class Planter_JSONeer : MonoBehaviour
 
 			// Add the Type list to the new Mode, and add the new Mode to the Main Category List.
 
-			currCategory.types = plantList;
+			currCategory.plants = plantList;
 
 			categoriesFromPlanter.Add (currCategory);
 		}
