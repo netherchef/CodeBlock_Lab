@@ -43,27 +43,17 @@ public class Planter : MonoBehaviour
 
 	private void Start ()
 	{
-		// On game start, activate an arbitrary mode
+		// On game start, activate an arbitrary category.
+		// If that fails, find the problem and log a warning.
 
-		if (!mouseHoverDisplay)
+		try
 		{
-			// Set the current mode
-
-			currentCategory = categories[0].name;
-
-			// Update the mode display
-
-			modeDisplay.text = currentCategory;
-
-			for (int c = 0; c < categories.Length; c++)
-			{
-				if (categories[c].name == currentCategory)
-				{
-					// Spawn clone
-
-					mouseHoverDisplay = Instantiate (categories[c].types[0].item, MousePosition (), Quaternion.identity, transform);
-				}
-			}
+			if (!mouseHoverDisplay) Activate_Category (categories[0].name);
+		}
+		catch
+		{
+			if (categories.Length == 0) Debug.LogWarning ("No categories set yo.");
+			if (!holder) Debug.LogWarning ("No holder set yo.");
 		}
 	}
 
@@ -92,7 +82,7 @@ public class Planter : MonoBehaviour
 			return;
 		}
 
-		// Mode Change
+		// Category Change
 
 		if (Input.anyKeyDown)
 		{
@@ -121,7 +111,7 @@ public class Planter : MonoBehaviour
 			return;
 		}
 
-		// Type
+		// Types
 
 		if (Scroll_Up ())
 		{
@@ -158,7 +148,7 @@ public class Planter : MonoBehaviour
 			return;
 		}
 
-		// Position clone at mouse
+		// Position spawned object at mouse
 
 		if (mouseHoverDisplay) mouseHoverDisplay.transform.position = MousePosition ();
 	}
@@ -193,4 +183,25 @@ public class Planter : MonoBehaviour
 	}
 
 	#endregion
+
+	private void Activate_Category (string targCategory)
+	{
+		// Set the current Category
+
+		currentCategory = targCategory;
+
+		// Update the mode display
+
+		modeDisplay.text = currentCategory;
+
+		for (int c = 0; c < categories.Length; c++)
+		{
+			if (categories[c].name == currentCategory)
+			{
+				// Spawn new object on the mouse
+
+				mouseHoverDisplay = Instantiate (categories[c].types[0].item, MousePosition (), Quaternion.identity, transform);
+			}
+		}
+	}
 }
