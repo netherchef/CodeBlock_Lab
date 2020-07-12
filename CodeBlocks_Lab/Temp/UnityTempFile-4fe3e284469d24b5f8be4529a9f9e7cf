@@ -320,6 +320,7 @@
 "Assets/Modules/Mover/Scripts/Mover.cs"
 "Assets/Modules/Planter/Scripts/Planter.cs"
 "Assets/Modules/Planter/Scripts/Planter_JSONeer.cs"
+"Assets/Modules/Planter/Scripts/Planter_Spawner.cs"
 "Assets/Modules/Proximiter/Scripts/Proximiter.cs"
 "Assets/Modules/Puzzler/Puzzler.cs"
 "Assets/Modules/Scaler/Scaler.cs"

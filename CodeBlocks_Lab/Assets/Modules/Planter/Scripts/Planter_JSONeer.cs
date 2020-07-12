@@ -39,44 +39,38 @@ public class Planter_JSONeer : MonoBehaviour
 
 	// Variables
 
+	[Header ("JSON:")]
 	public string fileName = "Plants.json";
-	public bool pullContainer;
-	public bool pullPersistent;
-	public bool writePersistent;
+
+	public bool writeToJSON;
+	public bool pullFromJSON;
 
 	public string trailingSuffix = "(Clone)(Clone)";
 
 	private void Update ()
 	{
-		// Pull from Planter
+		// Write
 
-		if (pullContainer)
+		if (writeToJSON)
 		{
-			pullContainer = false;
+			writeToJSON = false;
 
 			container = Categories_From_Planter ();
 
-			return;
-		}
-
-		// Read
-
-		if (pullPersistent)
-		{
-			pullPersistent = false;
-
-			container = DataContainer_From_JSON ();
+			Write_Container_To_JSON ();
 
 			return;
 		}
 
-		// Write
+		// Pull
 
-		if (writePersistent)
+		if (pullFromJSON)
 		{
-			writePersistent = false;
+			pullFromJSON = false;
 
-			DataContainer_To_JSON ();
+			container = Pull_Container_From_JSON ();
+
+			return;
 		}
 	}
 
@@ -88,12 +82,12 @@ public class Planter_JSONeer : MonoBehaviour
 
 		// Make a copy of the main container holding all the goodies
 
-		GameObject mainContainer = planter.container;
+		Transform mainContainer = planter.holder;
 
 		// The container holds multiple Parents.
 		// These Parent transforms hold the Planted Objects.
 
-		for (int m = 0; m < mainContainer.transform.childCount; m++)
+		for (int m = 0; m < mainContainer.childCount; m++)
 		{
 			// For each Parent:
 			// Create a Category, and name it after the current Parent.
@@ -101,18 +95,18 @@ public class Planter_JSONeer : MonoBehaviour
 
 			Category currCategory = new Category
 			{
-				name = mainContainer.transform.GetChild (m).name
+				name = mainContainer.GetChild (m).name
 			};
 
 			List<Plant> plantList = new List<Plant> ();
 
-			for (int c = 0; c < mainContainer.transform.GetChild (m).childCount; c++)
+			for (int c = 0; c < mainContainer.GetChild (m).childCount; c++)
 			{
 				// For each of the Planted Objects:
 				// Create a new Plant, and grab its values from the current Planted Object.
 				// Add the new Plant to the Plant list.
 
-				Transform currPlantedObject = mainContainer.transform.GetChild (m).GetChild (c);
+				Transform currPlantedObject = mainContainer.GetChild (m).GetChild (c);
 
 				int count = currPlantedObject.name.Length - trailingSuffix.Length;
 
@@ -141,7 +135,7 @@ public class Planter_JSONeer : MonoBehaviour
 
 	#region From JSON __________________________________________________________
 
-	public Container DataContainer_From_JSON ()
+	public Container Pull_Container_From_JSON ()
 	{
 		// Define JSON file path
 
@@ -178,7 +172,7 @@ public class Planter_JSONeer : MonoBehaviour
 
 	#region To JSON ____________________________________________________________
 
-	private void DataContainer_To_JSON ()
+	private void Write_Container_To_JSON ()
 	{
 		// Define JSON file path
 

@@ -29,7 +29,7 @@ public class Planter : MonoBehaviour
 
 	public Camera cam;
 	public Text modeDisplay;
-	public GameObject container;
+	public Transform holder;
 
 	private GameObject mouseHoverDisplay;
 
@@ -84,7 +84,7 @@ public class Planter : MonoBehaviour
 			catch
 			{
 				GameObject newDirectory = new GameObject (currentCategory);
-				newDirectory.transform.SetParent (container.transform);
+				newDirectory.transform.SetParent (holder);
 
 				newInstance.transform.SetParent (newDirectory.transform);
 			}

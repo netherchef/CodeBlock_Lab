@@ -10,7 +10,7 @@ public class Planter_Spawner : MonoBehaviour
 	public Planter planter;
 	public Planter_JSONeer planter_JSONeer;
 
-	public GameObject container;
+	public Transform holder;
 
 	// Variables
 
@@ -24,7 +24,7 @@ public class Planter_Spawner : MonoBehaviour
 
 			// Make a copy of the JSON Container's Categories
 
-			List<Category> JSONCats = planter_JSONeer.container.categories;
+			List<Category> JSONCats = planter_JSONeer.Pull_Container_From_JSON ().categories;
 
 			for (int c = 0; c < JSONCats.Count; c++)
 			{
@@ -32,7 +32,7 @@ public class Planter_Spawner : MonoBehaviour
 				/// Create a Holding Transform, and put it in the game object that will hold everything.
 
 				GameObject currCat = new GameObject (JSONCats[c].name);
-				currCat.transform.SetParent (container.transform);
+				currCat.transform.SetParent (holder);
 
 				// For each Plant:
 
