@@ -10,25 +10,54 @@ public class Menuman : MonoBehaviour
 
 	public GameObject[] buttons;
 
+	public MenuFunctions menuFunctions;
+
 	// Variables
+
+	private bool directionalReceived;
 
 	public int currentButtonIndex;
 
+	public string selectButton = "Submit";
+
 	private void Update ()
 	{
-		if (Input.GetAxisRaw ("Vertical") > 0)
+		if (Input.GetButtonDown (selectButton))
 		{
-			if (currentButtonIndex > 0)
+			Perform_Menu_Function ();
+
+			return;
+		}
+
+		if (Input.GetAxisRaw ("Vertical") != 0)
+		{
+			if (!directionalReceived)
 			{
-				currentButtonIndex--;
+				directionalReceived = true;
+
+				if (Input.GetAxisRaw ("Vertical") > 0)
+				{
+					if (currentButtonIndex > 0) currentButtonIndex--;
+				}
+				else if (Input.GetAxisRaw ("Vertical") < 0)
+				{
+					if (currentButtonIndex < buttons.Length - 1) currentButtonIndex++;
+				}
 			}
 		}
-		else if (Input.GetAxisRaw ("Vertical") < 0)
+		else if (directionalReceived)
 		{
-			if (currentButtonIndex < buttons.Length - 1)
-			{
-				currentButtonIndex++;
-			}
+			directionalReceived = false;
+		}
+	}
+
+	private void Perform_Menu_Function ()
+	{
+		List<MenuFunctions.MenuFunction> functions = menuFunctions.functions;
+
+		for (int f = 0; f < functions.Count; f++)
+		{
+			if (f == currentButtonIndex) functions[f] ();
 		}
 	}
 }
