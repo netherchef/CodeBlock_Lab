@@ -1,4 +1,4 @@
-﻿// Sprite Fader v0.01
+﻿// Sprite Fader v0.02
 
 using System.Collections;
 using System.Collections.Generic;
@@ -15,40 +15,75 @@ public class SpriteFader : MonoBehaviour
 
 	// Variables
 
-	public bool fade;
+	public bool startFade;
 
 	public float speed = 2;
 
+	// Enumerators
+
+	private IEnumerator doFade;
+
 	private void Update ()
 	{
-		if (fade)
+		if (startFade)
 		{
-			if (fadeMode == FadeMode_Sprite.Out)
-			{
-				if (SR.color.a > 0)
-				{
-					SR.color -= new Color (0, 0, 0, speed * Time.deltaTime);
-				}
-				else
-				{
-					SR.color = new Color (SR.color.r, SR.color.g, SR.color.b, 0);
-				}
+			startFade = false;
 
-				return;
-			}
-			else if (fadeMode == FadeMode_Sprite.In)
-			{
-				if (SR.color.a < 1)
-				{
-					SR.color += new Color (0, 0, 0, speed * Time.deltaTime);
-				}
-				else
-				{
-					SR.color = new Color (SR.color.r, SR.color.g, SR.color.b, 1);
-				}
-
-				return;
-			}
+			Fade (fadeMode);
 		}
+	}
+
+	#region Colour _____________________________________________________________
+
+	private void Set_SR_Alpha (SpriteRenderer sr, float alpha)
+	{
+		sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, alpha);
+	}
+
+	#endregion
+
+	private void Fade (FadeMode_Sprite fadeMode)
+	{
+		if (doFade != null) StopCoroutine (doFade);
+
+		if (fadeMode == FadeMode_Sprite.In)
+		{
+			doFade = Do_Fade_In ();
+			StartCoroutine (doFade);
+
+			return;
+		}
+
+		if (fadeMode == FadeMode_Sprite.Out)
+		{
+			doFade = Do_Fade_Out ();
+			StartCoroutine (doFade);
+
+			return;
+		}
+	}
+
+	private IEnumerator Do_Fade_In ()
+	{
+		while (SR.color.a < 1)
+		{
+			SR.color += new Color (0, 0, 0, speed * Time.deltaTime);
+
+			yield return null;
+		}
+
+		Set_SR_Alpha (SR, 1);
+	}
+
+	private IEnumerator Do_Fade_Out ()
+	{
+		while (SR.color.a > 0)
+		{
+			SR.color -= new Color (0, 0, 0, speed * Time.deltaTime);
+
+			yield return null;
+		}
+
+		Set_SR_Alpha (SR, 0);
 	}
 }

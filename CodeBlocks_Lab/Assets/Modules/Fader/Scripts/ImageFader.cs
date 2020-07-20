@@ -13,7 +13,6 @@ public class ImageFader : MonoBehaviour
 
 	public Image image;
 	public FadeMode fadeMode;
-	public Text text;
 
 	// Variables
 
@@ -23,8 +22,6 @@ public class ImageFader : MonoBehaviour
 
 	private void Update ()
 	{
-		text.text = image.color.a.ToString ();
-
 		if (fade)
 		{
 			if (fadeMode == FadeMode.Out)
