@@ -1,36 +1,55 @@
-﻿using System.Collections;
+﻿// Image Fader v0.01
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+public enum FadeMode { In, Out }
 
 public class ImageFader : MonoBehaviour
 {
 	// Components
 
 	public Image image;
+	public FadeMode fadeMode;
+	public Text text;
 
 	// Variables
 
-	public bool active;
+	public bool fade;
 
-	public bool fadeOut;
-	public bool fadeIn;
-
-	public float speed = 1;
+	public float speed = 2;
 
 	private void Update ()
 	{
-		if (active)
+		text.text = image.color.a.ToString ();
+
+		if (fade)
 		{
-			if (fadeOut)
+			if (fadeMode == FadeMode.Out)
 			{
-				image.color -= new Color (0, 0, 0, speed * Time.deltaTime);
+				if (image.color.a > 0)
+				{
+					image.color -= new Color (0, 0, 0, speed * Time.deltaTime);
+				}
+				else
+				{
+					image.color = new Color (image.color.r, image.color.g, image.color.b, 0);
+				}
 
 				return;
 			}
-			else if (fadeIn)
+			else if (fadeMode == FadeMode.In)
 			{
-				image.color += new Color (0, 0, 0, speed * Time.deltaTime);
+				if (image.color.a < 1)
+				{
+					image.color += new Color (0, 0, 0, speed * Time.deltaTime);
+				}
+				else
+				{
+					image.color = new Color (image.color.r, image.color.g, image.color.b, 1);
+				}
 
 				return;
 			}
