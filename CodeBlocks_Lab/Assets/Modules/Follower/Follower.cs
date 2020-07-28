@@ -17,6 +17,9 @@ public class Follower : MonoBehaviour
 
 	public float zPosition;
 
+	public bool freezeX;
+	public bool freezeY;
+
 	private void Update ()
 	{
 		// If the follower is far from the target, 
@@ -24,10 +27,14 @@ public class Follower : MonoBehaviour
 
 		if (Vector3.Magnitude (followerObject.position - targetObject.position) > 1)
 		{
-			float x = -(followerObject.position.x - targetObject.position.x);
-			float y = -(followerObject.position.y - targetObject.position.y);
+			Vector3 movement = new Vector3 ();
 
-			followerObject.Translate (new Vector3 (x, y, zPosition) * speed * Time.deltaTime);
+			if (!freezeX) movement.x = -(followerObject.position.x - targetObject.position.x);
+			if (!freezeY) movement.y = -(followerObject.position.y - targetObject.position.y);
+
+			movement.z = zPosition;
+
+			followerObject.Translate (movement * speed * Time.deltaTime);
 		}
 	}
 
@@ -48,4 +55,24 @@ public class Follower : MonoBehaviour
 	}
 
 	#endregion
+
+	public void Freeze_X ()
+	{
+		freezeX = true;
+	}
+
+	public void Unfreeze_X ()
+	{
+		freezeX = false;
+	}
+
+	public void Freeze_Y ()
+	{
+		freezeY = true;
+	}
+
+	public void Unfreeze_Y ()
+	{
+		freezeY = false;
+	}
 }
