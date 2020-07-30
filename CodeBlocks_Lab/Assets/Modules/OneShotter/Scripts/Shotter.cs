@@ -28,6 +28,8 @@ public class Shotter : MonoBehaviour
 
 	private void Update ()
 	{
+		// Single
+
 		if (playMode == PlayMode.Single)
 		{
 			if (currentSpriteIndex < sprites.Length)
@@ -51,6 +53,8 @@ public class Shotter : MonoBehaviour
 
 			return;
 		}
+
+		// Repeat
 
 		if (playMode == PlayMode.Repeat)
 		{
