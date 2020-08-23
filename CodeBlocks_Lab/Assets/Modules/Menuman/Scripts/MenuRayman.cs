@@ -22,6 +22,9 @@ public class MenuRayman : MonoBehaviour
 
 	public float distance = 1f;
 
+	private bool holdingUp;
+	private bool holdingDown;
+
 	// Debug
 
 	public bool debug;
@@ -32,54 +35,150 @@ public class MenuRayman : MonoBehaviour
 
 		currentButton.transform = firstButton;
 		currentButton.collider = firstButton.GetComponent<Collider2D> ();
+		Select (currentButton);
 	}
 
 	private void Update ()
 	{
-		if (Press_Up () || Press_Down ())
+		if (Press_Up ())
 		{
-			RaycastHit2D nextBtn = Next_Button (currentButton.transform);
-
-			if (nextBtn)
+			if (!holdingUp)
 			{
-				// Try to run the function.
+				holdingUp = true;
 
-				string nextFunction = nextBtn.transform.name;
+				RaycastHit2D nextBtn = Next_Button (currentButton.transform);
 
-				if (nextFunction != "")
+				if (nextBtn)
 				{
-					menuFunctions.Run_Function (nextFunction);
+					// Try to run the function.
+
+					string nextFunction = nextBtn.transform.name;
+
+					if (nextFunction != "")
+					{
+						menuFunctions.Run_Function (nextFunction);
+					}
+
+					// Enable the current button's collider and
+					// apply its UNselected styling.
+
+					currentButton.collider.enabled = true;
+					UnSelect (currentButton);
+
+					// Assign the new current button.
+
+					currentButton.transform = nextBtn.transform;
+					currentButton.collider = nextBtn.collider;
+
+					// Disable the next button's collider to
+					// prevent the raycast from hitting it.
+					// Also apply its selected styling.
+
+					currentButton.collider.enabled = false;
+					Select (currentButton);
+				}
+				else
+				{
+					// Debug
+
+					if (debug) Debug.LogWarning ("No button found.");
 				}
 
-				// Enable the current button's collider.
-
-				currentButton.collider.enabled = true;
-
-				// Assign the new current button.
-
-				currentButton.transform = nextBtn.transform;
-				currentButton.collider = nextBtn.collider;
-
-				// Disable the next button's collider to
-				// prevent the raycast from hitting it.
-
-				currentButton.collider.enabled = false;
-			}
-			else
-			{
 				// Debug
 
-				if (debug) Debug.LogWarning ("No button found.");
+				if (debug)
+				{
+					Debug.DrawLine (currentButton.transform.position, currentButton.transform.position + Direction () * distance, Color.yellow);
+				}
 			}
 
-			// Debug
-
-			if (debug)
-			{
-				Debug.DrawLine (currentButton.transform.position, currentButton.transform.position + Direction () * distance, Color.yellow);
-			}
+			return;
 		}
+
+		if (Press_Down ())
+		{
+			if (!holdingDown)
+			{
+				holdingDown = true;
+
+				RaycastHit2D nextBtn = Next_Button (currentButton.transform);
+
+				if (nextBtn)
+				{
+					// Try to run the function.
+
+					string nextFunction = nextBtn.transform.name;
+
+					if (nextFunction != "")
+					{
+						menuFunctions.Run_Function (nextFunction);
+					}
+
+					// Enable the current button's collider and
+					// apply its UNselected styling.
+
+					currentButton.collider.enabled = true;
+					UnSelect (currentButton);
+
+					// Assign the new current button.
+
+					currentButton.transform = nextBtn.transform;
+					currentButton.collider = nextBtn.collider;
+
+					// Disable the next button's collider to
+					// prevent the raycast from hitting it.
+					// Also apply its selected styling.
+
+					currentButton.collider.enabled = false;
+					Select (currentButton);
+				}
+				else
+				{
+					// Debug
+
+					if (debug) Debug.LogWarning ("No button found.");
+				}
+
+				// Debug
+
+				if (debug)
+				{
+					Debug.DrawLine (currentButton.transform.position, currentButton.transform.position + Direction () * distance, Color.yellow);
+				}
+			}
+
+			return;
+		}
+
+		// If there's no input
+
+		if (holdingUp) holdingUp = false;
+		if (holdingDown) holdingDown = false;
 	}
+
+	#region Select _____________________________________________________________
+
+	private void Select (MenuButton btn)
+	{
+		Vector3 btnScale = btn.transform.localScale;
+
+		btn.transform.localScale = new Vector3 (
+			btnScale.x / 2,
+			btnScale.y / 2,
+			btnScale.z);
+	}
+
+	private void UnSelect (MenuButton btn)
+	{
+		Vector3 btnScale = btn.transform.localScale;
+
+		btn.transform.localScale = new Vector3 (
+			btnScale.x * 2,
+			btnScale.y * 2,
+			btnScale.z);
+	}
+
+	#endregion
 
 	#region Find Next Button ___________________________________________________
 
