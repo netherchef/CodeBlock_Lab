@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Modules/Yarn Man/YarnMan Scene.unity
+- path: Assets/Modules/Sounder/Sounder Scene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

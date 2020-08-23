@@ -10,29 +10,42 @@ public class MenuFunctions : MonoBehaviour
 
 	private void Start ()
 	{
-		functions.Add (A);
-		functions.Add (B);
-		functions.Add (C);
-		functions.Add (D);
+		functions.Add (Start_Game);
+		functions.Add (Resume_Game);
+		functions.Add (Options);
+		functions.Add (Quit_Game);
 	}
 
-	private void A ()
+	public void Run_Function (string funcName)
 	{
-		print ("A");
+		for (int r = 0; r < functions.Count; r++)
+		{
+			if (funcName == functions[r].Method.Name)
+			{
+				functions[r] ();
+
+				return;
+			}
+		}
 	}
 
-	private void B ()
+	private void Start_Game ()
 	{
-		print ("B");
+		print ("Start!");
 	}
 
-	private void C ()
+	private void Resume_Game ()
 	{
-		print ("C");
+		print ("Resume!");
 	}
 
-	private void D ()
+	private void Options ()
 	{
-		print ("D");
+		print ("Options...");
+	}
+
+	private void Quit_Game ()
+	{
+		print ("Quit game...");
 	}
 }
