@@ -13,14 +13,16 @@ public class MenuRayman : MonoBehaviour
 	// Components
 
 	public MenuFunctions menuFunctions;
+	public MenuStyler menuStyler;
 
 	public Transform firstButton;
-
 	private MenuButton currentButton;
 
 	// Variables
 
 	public float distance = 1f;
+
+	public string currentFunction;
 
 	private bool holdingUp;
 	private bool holdingDown;
@@ -35,11 +37,33 @@ public class MenuRayman : MonoBehaviour
 
 		currentButton.transform = firstButton;
 		currentButton.collider = firstButton.GetComponent<Collider2D> ();
-		Select (currentButton);
+
+		// Set current function
+
+		currentFunction = currentButton.transform.name;
+
+		// Select first button
+
+		menuStyler.Select (currentButton);
 	}
 
 	private void Update ()
 	{
+		// Debug
+
+		Debug_Ray ();
+
+		// Run Function
+
+		if (Press_Submit ())
+		{
+			Run_Function (currentFunction);
+
+			return;
+		}
+
+		// Get next function
+
 		if (Press_Up ())
 		{
 			if (!holdingUp)
@@ -68,35 +92,7 @@ public class MenuRayman : MonoBehaviour
 
 		if (holdingUp) holdingUp = false;
 		if (holdingDown) holdingDown = false;
-
-		// Debug
-
-		Debug_Ray ();
 	}
-
-	#region Select _____________________________________________________________
-
-	private void Select (MenuButton btn)
-	{
-		Vector3 btnScale = btn.transform.localScale;
-
-		btn.transform.localScale = new Vector3 (
-			btnScale.x / 2,
-			btnScale.y / 2,
-			btnScale.z);
-	}
-
-	private void UnSelect (MenuButton btn)
-	{
-		Vector3 btnScale = btn.transform.localScale;
-
-		btn.transform.localScale = new Vector3 (
-			btnScale.x * 2,
-			btnScale.y * 2,
-			btnScale.z);
-	}
-
-	#endregion
 
 	#region Find Next Button ___________________________________________________
 
@@ -112,14 +108,14 @@ public class MenuRayman : MonoBehaviour
 
 			if (nextFunction != "")
 			{
-				menuFunctions.Run_Function (nextFunction);
+				currentFunction = nextFunction;
 			}
 
 			// Enable the current button's collider and
 			// apply its UNselected styling.
 
 			currentButton.collider.enabled = true;
-			UnSelect (currentButton);
+			menuStyler.UnSelect (currentButton);
 
 			// Assign the new current button.
 
@@ -131,7 +127,7 @@ public class MenuRayman : MonoBehaviour
 			// Also apply its selected styling.
 
 			currentButton.collider.enabled = false;
-			Select (currentButton);
+			menuStyler.Select (currentButton);
 		}
 		else
 		{
@@ -166,7 +162,21 @@ public class MenuRayman : MonoBehaviour
 
 	#endregion
 
+	#region Run Function _______________________________________________________
+
+	private void Run_Function (string funcName)
+	{
+		menuFunctions.Run_Function (funcName);
+	}
+
+	#endregion
+
 	#region Input ______________________________________________________________
+
+	private bool Press_Submit ()
+	{
+		return Input.GetButtonDown ("Submit");
+	}
 
 	private bool Press_Up ()
 	{
@@ -180,7 +190,7 @@ public class MenuRayman : MonoBehaviour
 
 	#endregion
 
-	#region  _________________________________________________________
+	#region Debug ______________________________________________________________
 
 	private void Debug_Ray ()
 	{
