@@ -46,50 +46,7 @@ public class MenuRayman : MonoBehaviour
 			{
 				holdingUp = true;
 
-				RaycastHit2D nextBtn = Next_Button (currentButton.transform);
-
-				if (nextBtn)
-				{
-					// Try to run the function.
-
-					string nextFunction = nextBtn.transform.name;
-
-					if (nextFunction != "")
-					{
-						menuFunctions.Run_Function (nextFunction);
-					}
-
-					// Enable the current button's collider and
-					// apply its UNselected styling.
-
-					currentButton.collider.enabled = true;
-					UnSelect (currentButton);
-
-					// Assign the new current button.
-
-					currentButton.transform = nextBtn.transform;
-					currentButton.collider = nextBtn.collider;
-
-					// Disable the next button's collider to
-					// prevent the raycast from hitting it.
-					// Also apply its selected styling.
-
-					currentButton.collider.enabled = false;
-					Select (currentButton);
-				}
-				else
-				{
-					// Debug
-
-					if (debug) Debug.LogWarning ("No button found.");
-				}
-
-				// Debug
-
-				if (debug)
-				{
-					Debug.DrawLine (currentButton.transform.position, currentButton.transform.position + Direction () * distance, Color.yellow);
-				}
+				Get_Next_Btn ();
 			}
 
 			return;
@@ -101,50 +58,7 @@ public class MenuRayman : MonoBehaviour
 			{
 				holdingDown = true;
 
-				RaycastHit2D nextBtn = Next_Button (currentButton.transform);
-
-				if (nextBtn)
-				{
-					// Try to run the function.
-
-					string nextFunction = nextBtn.transform.name;
-
-					if (nextFunction != "")
-					{
-						menuFunctions.Run_Function (nextFunction);
-					}
-
-					// Enable the current button's collider and
-					// apply its UNselected styling.
-
-					currentButton.collider.enabled = true;
-					UnSelect (currentButton);
-
-					// Assign the new current button.
-
-					currentButton.transform = nextBtn.transform;
-					currentButton.collider = nextBtn.collider;
-
-					// Disable the next button's collider to
-					// prevent the raycast from hitting it.
-					// Also apply its selected styling.
-
-					currentButton.collider.enabled = false;
-					Select (currentButton);
-				}
-				else
-				{
-					// Debug
-
-					if (debug) Debug.LogWarning ("No button found.");
-				}
-
-				// Debug
-
-				if (debug)
-				{
-					Debug.DrawLine (currentButton.transform.position, currentButton.transform.position + Direction () * distance, Color.yellow);
-				}
+				Get_Next_Btn ();
 			}
 
 			return;
@@ -154,6 +68,10 @@ public class MenuRayman : MonoBehaviour
 
 		if (holdingUp) holdingUp = false;
 		if (holdingDown) holdingDown = false;
+
+		// Debug
+
+		Debug_Ray ();
 	}
 
 	#region Select _____________________________________________________________
@@ -181,6 +99,47 @@ public class MenuRayman : MonoBehaviour
 	#endregion
 
 	#region Find Next Button ___________________________________________________
+
+	private void Get_Next_Btn ()
+	{
+		RaycastHit2D nextBtn = Next_Button (currentButton.transform);
+
+		if (nextBtn)
+		{
+			// Try to run the function.
+
+			string nextFunction = nextBtn.transform.name;
+
+			if (nextFunction != "")
+			{
+				menuFunctions.Run_Function (nextFunction);
+			}
+
+			// Enable the current button's collider and
+			// apply its UNselected styling.
+
+			currentButton.collider.enabled = true;
+			UnSelect (currentButton);
+
+			// Assign the new current button.
+
+			currentButton.transform = nextBtn.transform;
+			currentButton.collider = nextBtn.collider;
+
+			// Disable the next button's collider to
+			// prevent the raycast from hitting it.
+			// Also apply its selected styling.
+
+			currentButton.collider.enabled = false;
+			Select (currentButton);
+		}
+		else
+		{
+			// Debug
+
+			if (debug) Debug.LogWarning ("No button found.");
+		}
+	}
 
 	private RaycastHit2D Next_Button (Transform currBtn)
 	{
@@ -217,6 +176,18 @@ public class MenuRayman : MonoBehaviour
 	private bool Press_Down ()
 	{
 		return Direction ().y < 0;
+	}
+
+	#endregion
+
+	#region  _________________________________________________________
+
+	private void Debug_Ray ()
+	{
+		if (debug)
+		{
+			Debug.DrawLine (currentButton.transform.position, currentButton.transform.position + Direction () * distance, Color.yellow);
+		}
 	}
 
 	#endregion
