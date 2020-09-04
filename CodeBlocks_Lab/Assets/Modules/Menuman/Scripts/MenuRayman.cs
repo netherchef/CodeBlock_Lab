@@ -21,6 +21,7 @@ public class MenuRayman : MonoBehaviour
 	// Variables
 
 	public float distance = 1f;
+	public string submitButton = "Submit";
 
 	public string currentFunction;
 
@@ -55,7 +56,7 @@ public class MenuRayman : MonoBehaviour
 
 		// Run Function
 
-		if (Press_Submit ())
+		if (Press_Submit (submitButton))
 		{
 			Run_Function (currentFunction);
 
@@ -173,9 +174,9 @@ public class MenuRayman : MonoBehaviour
 
 	#region Input ______________________________________________________________
 
-	private bool Press_Submit ()
+	private bool Press_Submit (string submitBtn)
 	{
-		return Input.GetButtonDown ("Submit");
+		return Input.GetButtonDown (submitBtn);
 	}
 
 	private bool Press_Up ()
