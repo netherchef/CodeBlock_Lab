@@ -34,7 +34,8 @@ public class DataPasser : MonoBehaviour
 		DontDestroyOnLoad (this);
 	}
 
-	// Doors
+	/// Normal variables we access through functions like 
+	/// DataPasser.DPInstance.Set_Variable ().
 
 	[SerializeField]
 	private string variable;
