@@ -9,6 +9,10 @@ public class Shaker : MonoBehaviour
 	public Transform targetContainer;
 	public Transform target;
 
+	// Variables
+
+	public bool shaking;
+
 	// Enumerators
 
 	private IEnumerator do_Shake;
@@ -35,11 +39,13 @@ public class Shaker : MonoBehaviour
 
 	private IEnumerator Do_Shake (float duration = 1f, float power = 1f, float lossRate = 0f)
 	{
+		shaking = true;
+
 		float pow = power;
 
 		float endTime = Time.time + duration;
 
-		while (Time.time < endTime)
+		while (Time.time < endTime && pow > 0)
 		{
 			// Calculate Power Loss
 
@@ -67,11 +73,13 @@ public class Shaker : MonoBehaviour
 		// Reset
 
 		do_Shake = null;
+
+		shaking = false;
 	}
 
-	private void Start_Shake (float duration = 1f, float power = 1f, float lossRate = 0f)
+	public void Start_Shake (float duration = 1f, float power = 1f, float lossRate = 0f)
 	{
-		if (do_Shake != null)
+		if (shaking)
 		{
 			if (debug) Debug.LogWarning ("Do Shake has NOT been cleared.");
 
