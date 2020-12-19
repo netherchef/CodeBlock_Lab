@@ -18,7 +18,7 @@ public class Shaker : MonoBehaviour
 
 	// Enumerators
 
-	private IEnumerator do_Shake;
+	private Coroutine coroutine_Shake;
 
 	// Debug
 
@@ -95,19 +95,24 @@ public class Shaker : MonoBehaviour
 
 		// Clear coroutine container
 
-		do_Shake = null;
+		coroutine_Shake = null;
 	}
 
 	public void Start_Shake (float dur = 1f, float pow = 1f, float lossRate = 0f)
 	{
-		if (do_Shake != null)
+		// Start
+
+		if (coroutine_Shake == null)
 		{
-			if (debug) Debug.LogWarning ("Do Shake has NOT been cleared.");
+			coroutine_Shake = StartCoroutine (Do_Shake (dur, pow, lossRate));
 
 			return;
 		}
 
-		do_Shake = Do_Shake (dur, pow, lossRate);
-		StartCoroutine (do_Shake);
+		// Restart
+
+		StopCoroutine (coroutine_Shake);
+
+		coroutine_Shake = StartCoroutine (Do_Shake (dur, pow, lossRate));
 	}
 }
