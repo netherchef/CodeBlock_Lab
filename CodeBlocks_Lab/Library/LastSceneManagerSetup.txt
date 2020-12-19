@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Modules/Drunk Chaser/Drunk Chaser Scene.unity
+- path: Assets/Modules/Mover/Mover Scene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

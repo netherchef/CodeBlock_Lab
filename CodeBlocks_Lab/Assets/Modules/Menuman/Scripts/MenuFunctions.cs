@@ -18,11 +18,11 @@ public class MenuFunctions : MonoBehaviour
 
 	public void Run_Function (string funcName)
 	{
-		for (int r = 0; r < functions.Count; r++)
+		foreach (MenuFunction mf in functions)
 		{
-			if (funcName == functions[r].Method.Name)
+			if (funcName == mf.Method.Name)
 			{
-				functions[r] ();
+				mf ();
 
 				return;
 			}
