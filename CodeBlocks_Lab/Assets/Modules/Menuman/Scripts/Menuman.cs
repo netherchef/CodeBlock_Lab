@@ -50,9 +50,13 @@ public class Menuman : MonoBehaviour
 				{
 					if (currentButtonIndex > 0)
 					{
+						// Halve Previous Button Alpha
+
 						Change_Alpha (buttons[currentButtonIndex].GetComponent<SpriteRenderer> (), 0.5f);
 
 						currentButtonIndex--;
+
+						// Fill New Button Alpha
 
 						Change_Alpha (buttons[currentButtonIndex].GetComponent<SpriteRenderer> (), 1f);
 					}
@@ -61,9 +65,13 @@ public class Menuman : MonoBehaviour
 				{
 					if (currentButtonIndex < buttons.Length - 1)
 					{
+						// Halve Previous Button Alpha
+
 						Change_Alpha (buttons[currentButtonIndex].GetComponent<SpriteRenderer> (), 0.5f);
 
 						currentButtonIndex++;
+
+						// Fill New Button Alpha
 
 						Change_Alpha (buttons[currentButtonIndex].GetComponent<SpriteRenderer> (), 1f);
 					}
@@ -81,27 +89,6 @@ public class Menuman : MonoBehaviour
 				directionalReceived = false;
 			}
 		}
-
-		//if (Input.GetAxisRaw ("Vertical") != 0)
-		//{
-		//	if (!directionalReceived)
-		//	{
-		//		directionalReceived = true;
-
-		//		if (Input.GetAxisRaw ("Vertical") > 0)
-		//		{
-		//			if (currentButtonIndex > 0) currentButtonIndex--;
-		//		}
-		//		else if (Input.GetAxisRaw ("Vertical") < 0)
-		//		{
-		//			if (currentButtonIndex < buttons.Length - 1) currentButtonIndex++;
-		//		}
-		//	}
-		//}
-		//else if (directionalReceived)
-		//{
-		//	directionalReceived = false;
-		//}
 	}
 
 	private void Change_Alpha (SpriteRenderer sr, float targAlpha)
