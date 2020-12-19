@@ -358,7 +358,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetContainer: {fileID: 618685144}
   target: {fileID: 329925660}
-  debug: 0
+  shaking: 0
+  duration: 0
+  power: 0
+  debug: 1
   start: 0
   debugDuration: 2
   debugPower: 1

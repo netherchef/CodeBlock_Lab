@@ -13,6 +13,9 @@ public class Shaker : MonoBehaviour
 
 	public bool shaking;
 
+	public float duration;
+	public float power;
+
 	// Enumerators
 
 	private IEnumerator do_Shake;
@@ -25,7 +28,7 @@ public class Shaker : MonoBehaviour
 
 	public float debugDuration = 1f;
 	public float debugPower = 1f;
-	public float debugLossRate = 0f;
+	public float debugLossRate;
 
 	private void Update ()
 	{
@@ -37,56 +40,74 @@ public class Shaker : MonoBehaviour
 		}
 	}
 
-	private IEnumerator Do_Shake (float duration = 1f, float power = 1f, float lossRate = 0f)
+	private IEnumerator Do_Shake (float dur, float pow, float lossRate)
 	{
+		// Debug
+
+		if (debug) Debug.Log ("Shaking start.");
+
+		// Set Shaking Bool for external checks
+
 		shaking = true;
 
-		float pow = power;
+		// Record Target's Initial Position
 
-		float endTime = Time.time + duration;
+		Vector3 initPos = new Vector3 (0, 0, target.localPosition.z);
 
-		while (Time.time < endTime && pow > 0)
+		power = pow;
+		duration = dur;
+
+		while (duration > 0 && power > 0)
 		{
+			duration -= Time.deltaTime;
+
 			// Calculate Power Loss
 
-			if (pow > 0) pow -= lossRate;
+			if (power > 0) power -= lossRate;
 
 			// Calculate Displacement
 
-			Vector3 displacement = Random.insideUnitCircle * pow;
+			Vector3 displacement = Random.insideUnitCircle * power;
 
-			// Determine Final Position
+			displacement.z = target.localPosition.z;
 
-			Vector3 finalPos = new Vector3 (targetContainer.position.x + displacement.x, targetContainer.position.y + displacement.y, target.position.z);
+			// Position Target
 
-			// Position Target at Final Position
-
-			target.position = finalPos;
+			target.localPosition = displacement;
 
 			yield return null;
 		}
 
 		// Reset Target Position
 
-		target.position = new Vector3 (targetContainer.position.x, targetContainer.position.y, target.position.z);
+		target.localPosition = initPos;
 
-		// Reset
+		duration = 0;
+		power = 0;
 
-		do_Shake = null;
+		// Reset Shaking Bool
 
 		shaking = false;
+
+		// Debug
+
+		if (debug) Debug.Log ("Shaking done.");
+
+		// Clear coroutine container
+
+		do_Shake = null;
 	}
 
-	public void Start_Shake (float duration = 1f, float power = 1f, float lossRate = 0f)
+	public void Start_Shake (float dur = 1f, float pow = 1f, float lossRate = 0f)
 	{
-		if (shaking)
+		if (do_Shake != null)
 		{
 			if (debug) Debug.LogWarning ("Do Shake has NOT been cleared.");
 
 			return;
 		}
 
-		do_Shake = Do_Shake (duration, power, lossRate);
+		do_Shake = Do_Shake (dur, pow, lossRate);
 		StartCoroutine (do_Shake);
 	}
 }
