@@ -344,10 +344,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textDisplay: {fileID: 133445989}
-  conversation: {fileID: 11400000, guid: fa117bd56a6594201bde0ad0e22cce6a, type: 2}
-  talk: 0
-  proceed: 0
-  forkSymbol: <fork>
+  conversations:
+  - {fileID: 11400000, guid: fa117bd56a6594201bde0ad0e22cce6a, type: 2}
+  currSpeaker: 
 --- !u!4 &1047504315
 Transform:
   m_ObjectHideFlags: 0

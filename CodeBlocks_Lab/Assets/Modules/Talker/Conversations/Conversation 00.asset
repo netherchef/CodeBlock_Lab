@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: Conversation 00
   m_EditorClassIdentifier: 
   lines:
-  - Today has been a real good day.
-  - Or has it?
-  - 001 <fork>
-  - Is something on your mind?
+  - speaker: Blob
+    line: Alright.
+  - speaker: 
+    line: Ugh.
+  - speaker: Lela
+    line: Relax, this is the last one.
+  - speaker: Blob
+    line: That's what you said last time.

@@ -8,65 +8,47 @@ public class Talker : MonoBehaviour
 	// Components
 
 	public Text textDisplay;
-	public Conversation conversation;
+
+	public Conversation[] conversations;
 
 	// Variables
 
-	public bool talk;
-	public bool proceed;
-
-	public string forkSymbol;
-
-	// Enumerators
-
-	private IEnumerator converse;
+	public string currSpeaker;
 
 	private void Start ()
 	{
-		converse = Converse ();
-		StartCoroutine (converse);
+		StartCoroutine ("Do_Talk", conversations[0]);
 	}
 
-	private IEnumerator Converse ()
+	private IEnumerator Do_Talk (Conversation c)
 	{
-		while (enabled)
+		// Assign First Speaker
+
+		currSpeaker = c.lines[0].speaker;
+
+		foreach (Line l in c.lines)
 		{
-			if (talk)
+			// Switch Speakers
+
+			if (l.speaker != currSpeaker && l.speaker != "")
 			{
-				for (int i = 0; i < conversation.lines.Length; i++)
-				{
-					// Check for option
-
-					if (conversation.lines[i].Contains (forkSymbol))
-					{
-						// Get the fork ID by removing every character starting from 3rd index
-						// This allows 3-digit fork IDs
-						// Eg: "001 <fork>" => "001"
-
-						string forkID = conversation.lines[i].Remove (3);
-
-						textDisplay.text = forkID;
-					}
-					else
-					{
-						// Print line
-
-						textDisplay.text = conversation.lines[i];
-					}
-
-					// Wait to proceed
-
-					while (!proceed) yield return null;
-
-					proceed = false;
-				}
-
-				textDisplay.text = "";
-
-				talk = false;
+				currSpeaker = l.speaker;
 			}
 
-			yield return null;
+			// Print Line
+
+			textDisplay.text = l.line;
+
+			// Proceed
+
+			if (Input.GetButtonDown ("Submit")) yield return null;
+			while (!Input.GetButtonDown ("Submit")) yield return null;
 		}
+
+		// Reset
+
+		textDisplay.text = "";
+
+		currSpeaker = "";
 	}
 }
