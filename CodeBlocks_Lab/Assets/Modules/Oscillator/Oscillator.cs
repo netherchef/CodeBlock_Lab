@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum OscillateMode { Horizontal, Vertical, Diagonal_01, Diagonal_02 }
+public enum OscillateMode { Horizontal, Vertical, Diagonal_01, Diagonal_02, Circle }
 
 public class Oscillator : MonoBehaviour
 {
@@ -27,8 +27,7 @@ public class Oscillator : MonoBehaviour
 	{
 		if (oscillate)
 		{
-			do_Oscillate = Do_Oscillate ();
-			StartCoroutine (do_Oscillate);
+			Start_Oscillation ();
 		}
 	}
 
@@ -65,6 +64,11 @@ public class Oscillator : MonoBehaviour
 					pos.x = Mathf.Cos (s);
 					pos.y = Mathf.Cos (s);
 					break;
+
+				case OscillateMode.Circle:
+					pos.x = Mathf.Sin (s);
+					pos.y = Mathf.Cos (s);
+					break;
 			}
 
 			// Oscillation Ranger
@@ -76,6 +80,19 @@ public class Oscillator : MonoBehaviour
 			target.position = pos;
 
 			yield return null;
+		}
+
+		do_Oscillate = null;
+	}
+
+	public void Start_Oscillation ()
+	{
+		if (do_Oscillate == null)
+		{
+			do_Oscillate = Do_Oscillate ();
+			StartCoroutine (do_Oscillate);
+
+			if (!oscillate) oscillate = true;
 		}
 	}
 }
