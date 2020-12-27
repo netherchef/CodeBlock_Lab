@@ -10,10 +10,18 @@ public class Menuman : MonoBehaviour
 
 	public GameObject[] buttons;
 
+	// Scripts
+
 	[Header ("Functions:")]
 	public MenuFunctions menuFunctions;
 
+	public MenuSounder sounder;
+
 	// Variables
+
+	[Header ("Button Style:")]
+	public float dormantAlpha = .5f;
+	public float activeAlpha = 1f;
 
 	private bool directionalReceived;
 
@@ -35,6 +43,10 @@ public class Menuman : MonoBehaviour
 		{
 			Perform_Menu_Function ();
 
+			// Sound
+
+			if (sounder) sounder.Play_Select_Sound ();
+
 			return;
 		}
 
@@ -42,7 +54,7 @@ public class Menuman : MonoBehaviour
 
 		if (!directionalReceived)
 		{
-			if (Input.GetAxisRaw ("Vertical") != 0)
+			if (Mathf.Abs(Input.GetAxisRaw("Vertical")) > 0)
 			{
 				directionalReceived = true;
 
@@ -50,32 +62,40 @@ public class Menuman : MonoBehaviour
 				{
 					if (currentButtonIndex > 0)
 					{
-						// Halve Previous Button Alpha
+						// Style Previous Button
 
-						Change_Alpha (buttons[currentButtonIndex].GetComponent<SpriteRenderer> (), 0.5f);
+						Style_UnSelected_Button ();
+
+						// Navigate to Next Button
 
 						currentButtonIndex--;
 
-						// Fill New Button Alpha
+						// Style Current Button
 
-						Change_Alpha (buttons[currentButtonIndex].GetComponent<SpriteRenderer> (), 1f);
+						Style_Selected_Button ();
 					}
 				}
 				else if (Input.GetAxisRaw ("Vertical") < 0)
 				{
 					if (currentButtonIndex < buttons.Length - 1)
 					{
-						// Halve Previous Button Alpha
+						// Style Previous Button
 
-						Change_Alpha (buttons[currentButtonIndex].GetComponent<SpriteRenderer> (), 0.5f);
+						Style_UnSelected_Button ();
+
+						// Navigate to Next Button
 
 						currentButtonIndex++;
 
-						// Fill New Button Alpha
+						// Style Current Button
 
-						Change_Alpha (buttons[currentButtonIndex].GetComponent<SpriteRenderer> (), 1f);
+						Style_Selected_Button ();
 					}
 				}
+
+				// Sound
+
+				if (sounder) sounder.Play_Hover_Sound ();
 
 				return;
 			}
@@ -91,6 +111,18 @@ public class Menuman : MonoBehaviour
 		}
 	}
 
+	#region Styling ____________________________________________________________
+
+	private void Style_Selected_Button ()
+	{
+		Change_Alpha (buttons[currentButtonIndex].GetComponent<SpriteRenderer> (), activeAlpha);
+	}
+
+	private void Style_UnSelected_Button ()
+	{
+		Change_Alpha (buttons[currentButtonIndex].GetComponent<SpriteRenderer> (), dormantAlpha);
+	}
+
 	private void Change_Alpha (SpriteRenderer sr, float targAlpha)
 	{
 		Color btnColor = sr.color;
@@ -98,6 +130,8 @@ public class Menuman : MonoBehaviour
 
 		sr.color = btnColor;
 	}
+
+	#endregion
 
 	private void Perform_Menu_Function ()
 	{

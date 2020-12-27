@@ -18,11 +18,11 @@ public class MenuFunctions : MonoBehaviour
 
 	public void Run_Function (string funcName)
 	{
-		foreach (MenuFunction mf in functions)
+		for (int r = 0; r < functions.Count; r++)
 		{
-			if (funcName == mf.Method.Name)
+			if (funcName == functions[r].Method.Name)
 			{
-				mf ();
+				functions[r] ();
 
 				return;
 			}
@@ -47,5 +47,7 @@ public class MenuFunctions : MonoBehaviour
 	private void Quit_Game ()
 	{
 		print ("Quit game...");
+
+		Application.Quit ();
 	}
 }
