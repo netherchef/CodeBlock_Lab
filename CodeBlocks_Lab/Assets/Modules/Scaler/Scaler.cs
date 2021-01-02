@@ -1,104 +1,151 @@
-﻿// Scaler v0.02
+﻿// Scaler v0.03
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ScalerType { Increase, Decrease }
+public enum ScalerType { NULL, Increase, Decrease }
 
 public class Scaler : MonoBehaviour
 {
 	// Components
 
+	[Header ("Components:")]
+
 	public Transform target;
 
 	// Variables
 
-	public float newTargetScale;
-	public bool setTargetScale;
+	[Header ("Variables:")]
 
 	public float speed = 1;
-	public bool scaling;
-	public Vector3 targetScale;
 
-	public ScalerType scalerType;
+	[SerializeField]
+	private float targetScale;
 
-	private float initialScale = 1;
+	[SerializeField]
+	private ScalerType scalerType;
 
-	private void Update ()
+	// Enumerators
+
+	private IEnumerator do_Scale;
+
+	private void OnEnable ()
 	{
-		// Determine scaler type
+		do_Scale = Do_Scale ();
+		StartCoroutine (do_Scale);
+	}
 
-		if (!scaling)
+	private IEnumerator Do_Scale (float targScale = 0)
+	{
+		while (enabled)
 		{
-			if (setTargetScale)
+			// Wait for Scaler Type
+
+			while (scalerType == ScalerType.NULL) yield return null;
+
+			bool Up = scalerType == ScalerType.Increase;
+			bool Down = scalerType == ScalerType.Decrease;
+
+			// Set Target Scale
+
+			if (Up && Mathf.Abs (targScale) <= 0.0f)
 			{
-				setTargetScale = false;
-
-				targetScale = new Vector3 (1, 1, 1) * newTargetScale;
-
-				if (target.localScale.x < targetScale.x || target.localScale.y < targetScale.y || target.localScale.z < targetScale.z)
-				{
-					scalerType = ScalerType.Increase;
-				}
-				else if (target.localScale.x > targetScale.x || target.localScale.y > targetScale.y || target.localScale.z > targetScale.z)
-				{
-					scalerType = ScalerType.Decrease;
-				}
-				else
-				{
-					return;
-				}
-
-				newTargetScale = initialScale;
-
-				scaling = true;
+				targetScale = 1;
+			}
+			else if (Down && Mathf.Abs (targScale) <= 0.0f)
+			{
+				targetScale = 0;
+			}
+			else
+			{
+				targetScale = targScale;
 			}
 
-			return;
+			while (Up || Down)
+			{
+				// Check if Should Scale
+
+				Vector3 currScale = transform.localScale;
+
+				if (Up)
+				{
+					if (currScale.x >= targetScale && currScale.y >= targetScale) Up = false;
+				}
+				else if (Down)
+				{
+					if (currScale.x <= targetScale && currScale.y <= targetScale) Down = false;
+				}
+
+				// If Should Scale
+
+				if (Up) transform.localScale = Scale_Increase (transform.localScale, speed);
+				else if (Down) transform.localScale = Scale_Decrease (transform.localScale, speed);
+
+				// If NOT
+
+				if (!Up && !Down) transform.localScale = new Vector3 (targetScale, targetScale, transform.localScale.z);
+
+				yield return null;
+			}
+
+			// Reset
+
+			scalerType = ScalerType.NULL;
 		}
+	}
 
-		// Perform scaling according to Scaler Type
+	private IEnumerator Scale_Up (float targScale = 0)
+	{
+		// Set Target Scale
 
-		switch (scalerType)
+		if (Mathf.Abs (targScale) <= 0.0f) targetScale = 1;
+		else targetScale = targScale;
+
+		bool Up = true;
+
+		while (Up)
 		{
-			case ScalerType.Increase:
+			// Check if Should Scale
 
-				if (target.localScale.x < targetScale.x || target.localScale.y < targetScale.y || target.localScale.z < targetScale.z)
-				{
-					Vector3 newScale = Scale_Increase (target.localScale, speed);
+			if (transform.localScale.x >= targetScale && transform.localScale.y >= targetScale) Up = false;
 
-					if (newScale.x > targetScale.x || newScale.y > targetScale.y || newScale.z > targetScale.z)
-					{
-						target.localScale = targetScale;
+			// If Scaling Done
 
-						scaling = false;
-					}
-					else
-					{
-						target.localScale = Scale_Increase (target.localScale, speed);
-					}
-				}
-				break;
+			if (!Up) transform.localScale = new Vector3 (targetScale, targetScale, transform.localScale.z);
 
-			case ScalerType.Decrease:
+			// If Should Scale
 
-				if (target.localScale.x > targetScale.x || target.localScale.y > targetScale.y || target.localScale.z > targetScale.z)
-				{
-					Vector3 newScale = Scale_Decrease (target.localScale, speed);
+			if (Up) transform.localScale = Scale_Increase (transform.localScale, speed);
 
-					if (newScale.x < targetScale.x || newScale.y < targetScale.y || newScale.z < targetScale.z)
-					{
-						target.localScale = targetScale;
+			yield return null;
+		}
+	}
 
-						scaling = false;
-					}
-					else
-					{
-						target.localScale = Scale_Decrease (target.localScale, speed);
-					}
-				}
-				break;
+	private IEnumerator Scale_Down (float targScale = 0)
+	{
+		// Set Target Scale
+
+		if (Mathf.Abs (targScale) <= 0.0f) targetScale = 0;
+		else targetScale = targScale;
+
+		bool Down = true;
+
+		while (Down)
+		{
+			// Check if Should Scale
+
+			if (transform.localScale.x <= targetScale && transform.localScale.y <= targetScale) Down = false;
+
+			// If Scaling Done
+
+			if (!Down) transform.localScale = new Vector3 (targetScale, targetScale, transform.localScale.z);
+
+			// If Should Scale
+
+			if (Down) transform.localScale = Scale_Decrease (transform.localScale, speed);
+
+			yield return null;
 		}
 	}
 
@@ -106,12 +153,12 @@ public class Scaler : MonoBehaviour
 
 	private Vector3 Scale_Increase (Vector3 currScale, float speed)
 	{
-		return currScale + new Vector3 (speed, speed, speed) * Time.deltaTime;
+		return currScale + new Vector3 (speed, speed, 0) * Time.deltaTime;
 	}
 
 	private Vector3 Scale_Decrease (Vector3 currScale, float speed)
 	{
-		return currScale - new Vector3 (speed, speed, speed) * Time.deltaTime;
+		return currScale - new Vector3 (speed, speed, 0) * Time.deltaTime;
 	}
 
 	#endregion
