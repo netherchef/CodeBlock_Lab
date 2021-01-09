@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Shaders/Radial Gradient Shader/Radial Gradient Shader Scene.unity
+- path: Assets/Modules/Planter/Planter Scene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

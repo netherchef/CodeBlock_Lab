@@ -10,7 +10,7 @@ public class Planter_Spawner : MonoBehaviour
 	public Planter planter;
 	public Planter_JSONeer planter_JSONeer;
 
-	public Transform holder;
+	//public Transform holder;
 
 	private void Update ()
 	{
@@ -28,7 +28,7 @@ public class Planter_Spawner : MonoBehaviour
 				/// Create a Holding Transform, and put it in the game object that will hold everything.
 
 				GameObject currCat = new GameObject (JSONCats[c].name);
-				currCat.transform.SetParent (holder);
+				currCat.transform.SetParent (planter.holder);
 
 				// For each Plant:
 
@@ -55,8 +55,8 @@ public class Planter_Spawner : MonoBehaviour
 								if (types[k].item.name == currPlantName)
 								{
 									Instantiate (types[k].item,
-										JSONCats[c].plants[p].position, 
-										Quaternion.identity, 
+										JSONCats[c].plants[p].position,
+										Quaternion.identity,
 										currCat.transform);
 								}
 							}
