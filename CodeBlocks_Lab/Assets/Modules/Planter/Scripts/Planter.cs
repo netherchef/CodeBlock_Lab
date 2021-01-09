@@ -1,4 +1,4 @@
-﻿// Planter v0.01
+﻿// Planter v0.02
 
 using System.Collections;
 using System.Collections.Generic;
@@ -27,19 +27,33 @@ public class Planter : MonoBehaviour
 {
 	// Components
 
+	[Header ("Components:")]
+
 	public Camera cam;
 	public Text modeDisplay;
+	[Tooltip (" All objects loaded from the JSON File go here! ")]
 	public Transform holder;
 
 	private GameObject mouseHoverDisplay;
 
 	// Variables
 
+	[Header ("Variables:")]
+
+	public bool save;
+	public bool load;
+
 	public PlanterCategory[] categories;
+	public bool clear;
 
 	private int currentTypeIndex;
-
 	private string currentCategory;
+
+	[Header ("Autosave:")]
+
+	public bool disableAutosave;
+
+	private float autosaveTimer;
 
 	private void Start ()
 	{
@@ -151,6 +165,22 @@ public class Planter : MonoBehaviour
 		// Position spawned object at mouse
 
 		if (mouseHoverDisplay) mouseHoverDisplay.transform.position = MousePosition ();
+
+		// Autosave
+
+		if (!disableAutosave)
+		{
+			if (autosaveTimer < 10f)
+			{
+				autosaveTimer += Time.deltaTime;
+			}
+			else
+			{
+				save = true;
+
+				autosaveTimer = 0f;
+			}
+		}
 	}
 
 	private void Replace_MouseDisplay (GameObject clone)

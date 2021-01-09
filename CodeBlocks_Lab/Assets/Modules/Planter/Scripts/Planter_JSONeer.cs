@@ -34,16 +34,20 @@ public class Planter_JSONeer : MonoBehaviour
 {
 	// Components
 
-	public Planter planter;
+	[Header ("Components:")]
+
 	public Container container;
+
+	// Scripts
+
+	[Header ("Scripts:")]
+
+	public Planter planter;
 
 	// Variables
 
 	[Header ("JSON:")]
 	public string fileName = "Plants.json";
-
-	public bool writeToJSON;
-	public bool pullFromJSON;
 
 	public string trailingSuffix = "(Clone)(Clone)";
 
@@ -51,9 +55,9 @@ public class Planter_JSONeer : MonoBehaviour
 	{
 		// Write
 
-		if (writeToJSON)
+		if (planter.save)
 		{
-			writeToJSON = false;
+			planter.save = false;
 
 			container = Categories_From_Planter ();
 
@@ -62,15 +66,11 @@ public class Planter_JSONeer : MonoBehaviour
 			return;
 		}
 
-		// Pull
-
-		if (pullFromJSON)
+		if (planter.clear)
 		{
-			pullFromJSON = false;
+			planter.clear = false;
 
-			container = Pull_Container_From_JSON ();
-
-			return;
+			Clear_JSON ();
 		}
 	}
 
@@ -116,7 +116,7 @@ public class Planter_JSONeer : MonoBehaviour
 				{
 					name = correctName,
 					position = currPlantedObject.position
-			};
+				};
 
 				plantList.Add (plant);
 			}
@@ -191,6 +191,28 @@ public class Planter_JSONeer : MonoBehaviour
 		catch
 		{
 			Debug.LogWarning ("JSON file failed to write.");
+		}
+	}
+
+	private void Clear_JSON ()
+	{
+		// Define JSON file path
+
+		string filePath = Application.persistentDataPath + "/" + fileName;
+
+		try
+		{
+			// Format the struct as a JSON string
+
+			string jsonContent = JsonUtility.ToJson (new Container ());
+
+			// Write the JSON string to persistent data
+
+			File.WriteAllText (filePath, jsonContent);
+		}
+		catch
+		{
+			Debug.LogWarning ("Failed to Clear JSON.");
 		}
 	}
 

@@ -12,15 +12,11 @@ public class Planter_Spawner : MonoBehaviour
 
 	public Transform holder;
 
-	// Variables
-
-	public bool spawn;
-
 	private void Update ()
 	{
-		if (spawn)
+		if (planter.load)
 		{
-			spawn = false;
+			planter.load = false;
 
 			// Make a copy of the JSON Container's Categories
 
