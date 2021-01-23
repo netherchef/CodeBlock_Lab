@@ -21,6 +21,15 @@ public class PositionRounder : MonoBehaviour
 
 	private void OnEnable ()
 	{
+		if (!targetParent)
+		{
+			Debug.LogError ("Target Parent NOT Set.");
+
+			this.enabled = false;
+
+			return;
+		}
+
 		switch (mode)
 		{
 			case RoundMode.NULL:
@@ -33,6 +42,8 @@ public class PositionRounder : MonoBehaviour
 				Round_To_Eight ();
 				break;
 		}
+
+		targetParent = null;
 
 		this.enabled = false;
 	}
