@@ -40,6 +40,6 @@ public class Rounder : MonoBehaviour
 
 	private float Division (int divVal)
 	{
-		return 1 / divVal;
+		return 1f / divVal;
 	}
 }
