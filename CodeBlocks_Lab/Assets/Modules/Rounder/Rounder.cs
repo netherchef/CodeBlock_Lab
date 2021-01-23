@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rounder : MonoBehaviour
 {
-	public float Round_Half (float number)
+	public float Round_Four (float number)
 	{
 		float val = Mathf.Abs (number);
 		float sign = Mathf.Sign (number);
@@ -12,15 +12,15 @@ public class Rounder : MonoBehaviour
 
 		float diff = val - floor;
 
-		if (diff < 0.25f) return sign * floor;
-		else if (diff > 0.25f && diff < 0.75f) return sign * (floor + 0.5f);
-		else if (diff > 0.75f) return sign * Mathf.Ceil (val);
+		if (diff < Division (4)) return sign * floor;
+		else if (diff > Division (4) && diff < Division (4) * 3) return sign * (floor + Division (4) * 2f);
+		else if (diff > Division (4) * 3f) return sign * Mathf.Ceil (val);
 
-		Debug.LogError ("Could not Round to Half: " + number);
+		Debug.LogError ("Could not Round to Four: " + number + " | " + diff);
 		return number;
 	}
 
-	public float Round_Fourth (float number)
+	public float Round_Eight (float number)
 	{
 		float val = Mathf.Abs (number);
 		float sign = Mathf.Sign (number);
@@ -28,13 +28,18 @@ public class Rounder : MonoBehaviour
 
 		float diff = val - floor;
 
-		if (diff < 0.125f) return sign * floor;
-		else if (diff > 0.125f && diff < 0.375f) return sign * (floor + 0.25f);
-		else if (diff > 0.375f && diff < 0.625f) return sign * (floor + 0.5f);
-		else if (diff > 0.625f && diff < 0.875f) return sign * (floor + 0.75f);
-		else if (diff > 0.875f) return sign * Mathf.Ceil (val);
+		if (diff < Division (8)) return sign * floor;
+		else if (diff > Division (8) && diff < Division (8) * 3f) return sign * (floor + Division (8) * 2f);
+		else if (diff > Division (8) * 3f && diff < Division (8) * 5f) return sign * (floor + Division (8) * 4f);
+		else if (diff > Division (8) * 5f && diff < Division (8) * 7f) return sign * (floor + Division (8) * 6f);
+		else if (diff > Division (8) * 7f) return sign * Mathf.Ceil (val);
 
-		Debug.LogError ("Could not Round to Fourth: " + number);
+		Debug.LogError ("Could not Round to Eight: " + number + " | " + diff);
 		return number;
+	}
+
+	private float Division (int divVal)
+	{
+		return 1 / divVal;
 	}
 }
