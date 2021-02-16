@@ -53,34 +53,72 @@ public class PointPather : MonoBehaviour
 		//	target.position = PointOnSegment (1, target.position.x);
 		//}
 
-		target.position = PointOnSegment (1, target.position.x);
+		Vector3 newPos = target.position;
+
+		newPos.y = Y_Value (1, newPos.x);
+
+		target.position = newPos;
+
+		//target.position = PointOnSegment (1, target.position.x);
 	}
 
 	private Vector2 PointOnSegment (int segmentIndex, float targetX)
 	{
-		Vector2 point = new Vector2 (targetX, 0);
+		Vector2 newPoint = new Vector2 (targetX, 0);
 
-		Vector2 ratio = Segment_Ratio (segmentIndex);
 
-		point.y = -(Mathf.Abs (point.x) / ratio.x);
 
-		return point;
+		//Vector2 ratio = Segment_Ratio (segmentIndex);
+
+		//newPoint.y = -(Mathf.Abs (newPoint.x) / ratio.x);
+
+		return newPoint;
 	}
 
-	private Vector2 Segment_Ratio (int segmentIndex)
+	private float Y_Value (int segmentIndex, float xVal)
 	{
-		Vector2 ratio = new Vector2 (0, 0);
+		float y = 0;
+
+		Vector2 point = path[segmentIndex];
+
+		float segVectorY = Segment_Vector (segmentIndex).y;
+
+		y = point.y + -(segVectorY * Mathf.Abs (point.x - xVal));
+
+		return y;
+	}
+
+	private Vector2 Segment_Vector (int segmentIndex)
+	{
+		Vector2 segVector = new Vector2 (0, 0);
 
 		Vector2 pointA = path[segmentIndex - 1];
 		Vector2 pointB = path[segmentIndex];
 
-		ratio.x = Mathf.Abs (pointA.x - pointB.x);
-		ratio.y = Mathf.Abs (pointA.y - pointB.y);
+		segVector.x = -(pointA.x - pointB.x);
+		segVector.y = -(pointA.y - pointB.y);
 
-		float denom = ratio.x < ratio.y ? ratio.x : ratio.y;
+		float denom = Mathf.Abs (segVector.x) > Mathf.Abs (segVector.y) ? segVector.x : segVector.y;
 
-		ratio /= denom;
+		segVector /= Mathf.Abs (denom);
 
-		return ratio;
+		return segVector;
 	}
+
+	//private Vector2 Segment_Ratio (int segmentIndex)
+	//{
+	//	Vector2 ratio = new Vector2 (0, 0);
+
+	//	Vector2 pointA = path[segmentIndex - 1];
+	//	Vector2 pointB = path[segmentIndex];
+
+	//	ratio.x = Mathf.Abs (pointA.x - pointB.x);
+	//	ratio.y = Mathf.Abs (pointA.y - pointB.y);
+
+	//	float denom = ratio.x > ratio.y ? ratio.x : ratio.y;
+
+	//	ratio /= denom;
+
+	//	return ratio;
+	//}
 }
