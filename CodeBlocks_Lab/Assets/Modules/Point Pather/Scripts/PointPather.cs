@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class PointPather : MonoBehaviour
 {
@@ -10,90 +11,126 @@ public class PointPather : MonoBehaviour
 
 	[Header ("Variables:")]
 
-	//public Vector3 leftEdge;
-	//public Vector3 rightEdge;
+	public Vector3[] points;
 
-	[Space (10)]
+	private float pathRange = 0.25f;
 
-	public Vector3[] path;
+	private float leftEdge;
+	private float rightEdge;
 
 	[Header ("Debug:")]
 
 	public bool debug;
 
-	public bool snapTarget;
+	public bool editted;
+	private bool editing;
+	private int editPoint;
 
 	private void OnDrawGizmos ()
 	{
 		if (debug)
 		{
-			foreach (Vector3 point in path)
+			if (points.Length <= 0) return;
+
+			Color pointCol = Color.white;
+
+			foreach (Vector3 point in points)
 			{
-				Gizmos.color = Color.yellow;
-				Gizmos.DrawCube (point, new Vector3 (1, 1, 1));
+				pointCol += new Color (-0.1f, 0, 0);
+				Gizmos.color = pointCol;
+				Gizmos.DrawWireSphere (point, pathRange);
 			}
 		}
 	}
 
-	//private void Start ()
-	//{
-	//	foreach (Vector3 point in path)
-	//	{
-	//		if (point.x < leftEdge.x) leftEdge = point;
-	//		else if (point.y > rightEdge.x) rightEdge = point;
-	//	}
-	//}
+	private void Start ()
+	{
+		foreach (Vector3 point in points)
+		{
+			if (point.x < leftEdge) leftEdge = point.x;
+			else if (point.y > rightEdge) rightEdge = point.x;
+		}
+	}
 
 	private void Update ()
 	{
-		//if (snapTarget)
-		//{
-		//	snapTarget = false;
+		// Runtime Path Edit
 
-		//	target.position = PointOnSegment (1, target.position.x);
-		//}
+		if (debug)
+		{
+			if (Input.GetMouseButton (0))
+			{
+				Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+				mousePos.z = 0;
+
+				if (editing)
+				{
+					points[editPoint] = mousePos;
+				}
+				else if (Input.GetMouseButtonDown (0))
+				{
+					for (int p = 0; p < points.Length; p++)
+					{
+						if (Vector3.Magnitude (points[p] - mousePos) <= pathRange)
+						{
+							editing = true;
+							editPoint = p;
+
+							if (!editted) editted = true;
+						}
+					}
+				}
+			}
+			else if (editing)
+			{
+				editing = false;
+				editPoint = 0;
+			}
+		}
+
+		// Move X
 
 		Vector3 newPos = target.position;
-
-		newPos.y = Y_Value (1, newPos.x);
-
+		newPos.x += 4f * Input.GetAxisRaw ("Horizontal") * Time.deltaTime;
 		target.position = newPos;
 
-		//target.position = PointOnSegment (1, target.position.x);
-	}
+		// Check Path
 
-	private Vector2 PointOnSegment (int segmentIndex, float targetX)
-	{
-		Vector2 newPoint = new Vector2 (targetX, 0);
+		if (target.position.x > leftEdge || target.position.x < rightEdge)
+		{
+			// Position on Path
 
+			for (int i = 0; i < points.Length - 1; i++)
+			{
+				if (target.position.x > points[i].x && target.position.x < points[i + 1].x)
+				{
+					Vector3 pathPos = target.position;
 
+					pathPos.y = Y_Value (i, pathPos.x);
 
-		//Vector2 ratio = Segment_Ratio (segmentIndex);
+					target.position = pathPos;
 
-		//newPoint.y = -(Mathf.Abs (newPoint.x) / ratio.x);
-
-		return newPoint;
+					return;
+				}
+			}
+		}
 	}
 
 	private float Y_Value (int segmentIndex, float xVal)
 	{
-		float y = 0;
-
-		Vector2 point = path[segmentIndex];
+		Vector2 point = points[segmentIndex];
 
 		float segVectorY = Segment_Vector (segmentIndex).y;
 
-		y = point.y + -(segVectorY * Mathf.Abs (point.x - xVal));
-
-		return y;
+		return point.y + (segVectorY * Mathf.Abs (point.x - xVal));
 	}
 
 	private Vector2 Segment_Vector (int segmentIndex)
 	{
 		Vector2 segVector = new Vector2 (0, 0);
 
-		Vector2 pointA = path[segmentIndex - 1];
-		Vector2 pointB = path[segmentIndex];
+		Vector2 pointA = points[segmentIndex];
+		Vector2 pointB = points[segmentIndex + 1];
 
 		segVector.x = -(pointA.x - pointB.x);
 		segVector.y = -(pointA.y - pointB.y);
@@ -104,21 +141,4 @@ public class PointPather : MonoBehaviour
 
 		return segVector;
 	}
-
-	//private Vector2 Segment_Ratio (int segmentIndex)
-	//{
-	//	Vector2 ratio = new Vector2 (0, 0);
-
-	//	Vector2 pointA = path[segmentIndex - 1];
-	//	Vector2 pointB = path[segmentIndex];
-
-	//	ratio.x = Mathf.Abs (pointA.x - pointB.x);
-	//	ratio.y = Mathf.Abs (pointA.y - pointB.y);
-
-	//	float denom = ratio.x > ratio.y ? ratio.x : ratio.y;
-
-	//	ratio /= denom;
-
-	//	return ratio;
-	//}
 }
