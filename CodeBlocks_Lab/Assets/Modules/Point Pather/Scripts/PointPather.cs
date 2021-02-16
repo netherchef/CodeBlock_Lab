@@ -11,34 +11,59 @@ public class PointPather : MonoBehaviour
 
 	[Header ("Variables:")]
 
-	public Vector3[] points;
+	public List<Vector3> points = new List<Vector3> ();
 
 	private float pathRange = 0.25f;
 
 	private float leftEdge;
 	private float rightEdge;
 
+	[Header ("Runtime Editing:")]
+
+	public bool editable;
+
+	private bool editing;
+	private int currEditPoint;
+	private bool newPoint;
+
 	[Header ("Debug:")]
 
 	public bool debug;
-
-	public bool editted;
-	private bool editing;
-	private int editPoint;
 
 	private void OnDrawGizmos ()
 	{
 		if (debug)
 		{
-			if (points.Length <= 0) return;
+			if (points.Count <= 0) return;
 
 			Color pointCol = Color.white;
+			Color newPointCol = Color.magenta;
 
-			foreach (Vector3 point in points)
+			for (int p = 0; p < points.Count; p++)
 			{
-				pointCol += new Color (-0.1f, 0, 0);
-				Gizmos.color = pointCol;
-				Gizmos.DrawWireSphere (point, pathRange);
+				if (editable)
+				{
+					if (p == 0 && currEditPoint == 0)
+					{
+						if (newPoint) Gizmos.color = newPointCol;
+					}
+					else if (p == points.Count - 1 && currEditPoint == points.Count - 1)
+					{
+						if (newPoint) Gizmos.color = newPointCol;
+					}
+					else
+					{
+						pointCol += new Color (-0.1f, 0, 0);
+						Gizmos.color = pointCol;
+					}
+				}
+				else
+				{
+					pointCol += new Color (-0.1f, 0, 0);
+					Gizmos.color = pointCol;
+				}
+
+				Gizmos.DrawWireSphere (points[p], pathRange * 2);
 			}
 		}
 	}
@@ -56,35 +81,80 @@ public class PointPather : MonoBehaviour
 	{
 		// Runtime Path Edit
 
-		if (debug)
+		if (editable)
 		{
-			if (Input.GetMouseButton (0))
+			if (Input.GetMouseButton (0) || Input.GetMouseButton (1))
 			{
 				Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 				mousePos.z = 0;
 
+				// Move Existing Point
+
 				if (editing)
 				{
-					points[editPoint] = mousePos;
+					points[currEditPoint] = mousePos;
+
+					return;
 				}
-				else if (Input.GetMouseButtonDown (0))
+
+				if (Input.GetMouseButtonDown (0))
 				{
-					for (int p = 0; p < points.Length; p++)
+					for (int p = 0; p < points.Count; p++)
 					{
-						if (Vector3.Magnitude (points[p] - mousePos) <= pathRange)
+						if (Vector3.Magnitude (points[p] - mousePos) <= pathRange * 2)
 						{
 							editing = true;
-							editPoint = p;
+							currEditPoint = p;
 
-							if (!editted) editted = true;
+							return;
 						}
+					}
+				}
+
+				// New Point
+
+				if (Input.GetMouseButtonDown (1))
+				{
+					if (Vector3.Magnitude (points[0] - mousePos) <= pathRange * 2)
+					{
+						editing = true;
+
+						List<Vector3> newPoints = new List<Vector3> ();
+
+						newPoints.Add (points[0]);
+
+						foreach (Vector3 point in points)
+						{
+							newPoints.Add (point);
+						}
+
+						points = newPoints;
+
+						currEditPoint = 0;
+						newPoint = true;
+
+						return;
+					}
+
+					if (Vector3.Magnitude (points[points.Count - 1] - mousePos) <= pathRange * 2)
+					{
+						editing = true;
+
+						points.Add (points[points.Count - 1]);
+						currEditPoint = points.Count - 1;
+
+						newPoint = true;
+
+						return;
 					}
 				}
 			}
 			else if (editing)
 			{
 				editing = false;
-				editPoint = 0;
+				currEditPoint = 0;
+
+				if (newPoint) newPoint = false;
 			}
 		}
 
@@ -100,7 +170,7 @@ public class PointPather : MonoBehaviour
 		{
 			// Position on Path
 
-			for (int i = 0; i < points.Length - 1; i++)
+			for (int i = 0; i < points.Count - 1; i++)
 			{
 				if (target.position.x > points[i].x && target.position.x < points[i + 1].x)
 				{
