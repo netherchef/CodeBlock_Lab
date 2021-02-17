@@ -61,7 +61,7 @@ public class PointPathHandler : MonoBehaviour
 						for (int o = 0; o < paths[p].points.Count; o++)
 						{
 							Gizmos.color = Color.white;
-							Gizmos.DrawWireSphere (paths[p].points[o], pathRange * 2);
+							Gizmos.DrawWireSphere (paths[p].points[o], pathRange);
 						}
 					}
 				}
@@ -75,94 +75,15 @@ public class PointPathHandler : MonoBehaviour
 					for (int o = 0; o < paths[p].points.Count; o++)
 					{
 						Gizmos.color = Color.white;
-						Gizmos.DrawWireSphere (paths[p].points[o], pathRange * 2);
+						Gizmos.DrawWireSphere (paths[p].points[o], pathRange);
 					}
 				}
 			}
-
-			//for (int p = 0; p < paths.Length; p++)
-			//{
-			//	if (edit)
-			//	{
-			//		if (p == pathIndex)
-			//		{
-			//			for (int o = 0; o < paths[p].points.Count; o++)
-			//			{
-			//				Gizmos.color = Color.yellow;
-			//				Gizmos.DrawWireSphere (paths[p].points[o], pathRange * 2);
-			//			}
-			//		}
-			//		else
-			//		{
-			//			for (int o = 0; o < paths[p].points.Count; o++)
-			//			{
-			//				Gizmos.color = Color.white;
-			//				Gizmos.DrawWireSphere (paths[p].points[o], pathRange * 2);
-			//			}
-			//		}
-			//	}
-
-			//	if (paths[p] != null && paths[p].points.Count > 0)
-			//	{
-			//		if (edit)
-			//		{
-			//			for (int o = 0; o < paths[p].points.Count; o++)
-			//			{
-			//				if (p == pathIndex) Gizmos.color = Color.yellow;
-			//				else Gizmos.color = Color.white;
-
-			//				Gizmos.DrawWireSphere (paths[p].points[o], pathRange * 2);
-			//			}
-			//		}
-			//		else
-			//		{
-			//			for (int o = 0; o < paths[p].points.Count; o++)
-			//			{
-			//				Gizmos.color = Color.white;
-			//				Gizmos.DrawWireSphere (paths[p].points[o], pathRange * 2);
-			//			}
-			//		}
-			//	}
-			//}
-
-			// Draw Runtime Editing Points
-
-			//if (currEditPath != null)
-			//{
-			//	Color newPointCol = Color.magenta;
-
-			//	for (int p = 0; p < currEditPath.points.Count; p++)
-			//	{
-			//		if (p == 0 && currEditPoint == 0)
-			//		{
-			//			if (newPoint) Gizmos.color = newPointCol;
-			//		}
-			//		else if (p == currEditPath.points.Count - 1 && currEditPoint == currEditPath.points.Count - 1)
-			//		{
-			//			if (newPoint) Gizmos.color = newPointCol;
-			//		}
-			//		else
-			//		{
-			//			Gizmos.color = Color.yellow;
-			//		}
-			//	}
-			//}
 		}
 	}
 
 	private void Start ()
 	{
-		// Get Paths from Children
-
-		//PointPath[] childPaths = new PointPath[transform.childCount];
-
-		//for (int c = 0; c < childPaths.Length; c++)
-		//{
-		//	childPaths[c] = transform.GetChild (c).GetComponent<PointPath> ();
-		//}
-
-		//paths = childPaths;
-
 		// Set Edges
 
 		if (paths.Length <= 0) return;
@@ -189,16 +110,6 @@ public class PointPathHandler : MonoBehaviour
 
 	private void Update ()
 	{
-		if (edit)
-		{
-			if (previousIndex != pathIndex)
-			{
-				previousIndex = pathIndex;
-
-				currEditPath = paths[pathIndex];
-			}
-		}
-
 		// Move X
 
 		Vector3 newPos = target.position;
@@ -235,7 +146,19 @@ public class PointPathHandler : MonoBehaviour
 			}
 		}
 
+#if UNITY_EDITOR
+
 		// Runtime Path Edit
+
+		if (edit)
+		{
+			if (previousIndex != pathIndex)
+			{
+				previousIndex = pathIndex;
+
+				currEditPath = paths[pathIndex];
+			}
+		}
 
 		if (currEditPath != null)
 		{
@@ -308,6 +231,8 @@ public class PointPathHandler : MonoBehaviour
 				if (newPoint) newPoint = false;
 			}
 		}
+
+#endif
 	}
 
 	private float Y_Value (List<Vector3> points, int segmentIndex, float xVal)
