@@ -20,7 +20,7 @@ public class PointPathHandler : MonoBehaviour
 	[Header ("Runtime Editing:")]
 
 	public bool edit;
-	public int pathIndex;
+	public int editIndex;
 	private int previousIndex = 9999;
 
 	public PointPath currEditPath;
@@ -44,14 +44,19 @@ public class PointPathHandler : MonoBehaviour
 			{
 				for (int p = 0; p < paths.Length; p++)
 				{
-					if (p == pathIndex)
+					if (p == editIndex)
 					{
 						// Draw Runtime Editing Path
 
 						for (int o = 0; o < paths[p].points.Count; o++)
 						{
 							Gizmos.color = Color.yellow;
-							Gizmos.DrawWireSphere (paths[p].points[o], pathRange * 2);
+							Gizmos.DrawWireSphere (paths[p].points[o], pathRange);
+
+							if (o < paths[p].points.Count - 1)
+							{
+								Debug.DrawLine (paths[p].points[o], paths[p].points[o + 1], Color.white);
+							}
 						}
 					}
 					else
@@ -62,6 +67,11 @@ public class PointPathHandler : MonoBehaviour
 						{
 							Gizmos.color = Color.white;
 							Gizmos.DrawWireSphere (paths[p].points[o], pathRange);
+
+							if (o < paths[p].points.Count - 1)
+							{
+								Debug.DrawLine (paths[p].points[o], paths[p].points[o + 1], Color.white);
+							}
 						}
 					}
 				}
@@ -74,8 +84,26 @@ public class PointPathHandler : MonoBehaviour
 				{
 					for (int o = 0; o < paths[p].points.Count; o++)
 					{
-						Gizmos.color = Color.white;
-						Gizmos.DrawWireSphere (paths[p].points[o], pathRange);
+						if (paths[p].points[o].x == paths[p].leftEdge)
+						{
+							Gizmos.color = Color.green;
+							Gizmos.DrawWireSphere (paths[p].points[o], pathRange);
+						}
+						else if (paths[p].points[o].x == paths[p].rightEdge)
+						{
+							Gizmos.color = Color.red;
+							Gizmos.DrawWireSphere (paths[p].points[o], pathRange);
+						}
+						else
+						{
+							Gizmos.color = Color.white;
+							Gizmos.DrawWireSphere (paths[p].points[o], pathRange);
+						}
+
+						if (o < paths[p].points.Count - 1)
+						{
+							Debug.DrawLine (paths[p].points[o], paths[p].points[o + 1], Color.white);
+						}
 					}
 				}
 			}
@@ -90,6 +118,9 @@ public class PointPathHandler : MonoBehaviour
 
 		foreach (PointPath path in paths)
 		{
+			bool leftSet = false;
+			bool rightSet = false;
+
 			if (path != null)
 			{
 				if (path.points.Count <= 0)
@@ -98,17 +129,42 @@ public class PointPathHandler : MonoBehaviour
 				}
 				else
 				{
-					for (int p = 0; p < path.points.Count; p++)
+					for (int o = 0; o < path.points.Count; o++)
 					{
-						if (path.points[p].x < path.leftEdge) path.leftEdge = path.points[p].x;
-						else if (path.points[p].y > path.rightEdge) path.rightEdge = path.points[p].y;
+						if (!leftSet)
+						{
+							path.leftEdge = path.points[o].x;
+
+							leftSet = true;
+						}
+						else
+						{
+							if (path.points[o].x < path.leftEdge)
+							{
+								path.leftEdge = path.points[o].x;
+							}
+						}
+
+						if (!rightSet)
+						{
+							path.rightEdge = path.points[o].x;
+
+							rightSet = true;
+						}
+						else
+						{
+							if (path.points[o].x > path.rightEdge)
+							{
+								path.rightEdge = path.points[o].x;
+							}
+						}
 					}
 				}
 			}
 		}
 	}
 
-	private void Update ()
+	private void FixedUpdate ()
 	{
 		// Move X
 
@@ -116,52 +172,105 @@ public class PointPathHandler : MonoBehaviour
 		newPos.x += 4f * Input.GetAxisRaw ("Horizontal") * Time.deltaTime;
 		target.position = newPos;
 
-		// Position Target on Path
+		PointPath_PlayerPhysics targPhysics = target.GetComponent<PointPath_PlayerPhysics> ();
 
-		if (paths.Length > 0)
+		// Get Active Path
+
+		int activePathIndex = 9999;
+
+		for (int p = 0; p < paths.Length; p++)
 		{
-			foreach (PointPath path in paths)
+			if (target.position.x > paths[p].leftEdge && target.position.x < paths[p].rightEdge)
 			{
-				if (path != null)
-				{
-					List<Vector3> points = path.points;
+				activePathIndex = p;
 
-					if (target.position.x > path.leftEdge || target.position.x < path.rightEdge)
-					{
-						for (int i = 0; i < points.Count - 1; i++)
-						{
-							if (target.position.x > points[i].x && target.position.x < points[i + 1].x)
-							{
-								Vector3 pathPos = target.position;
-
-								pathPos.y = Y_Value (points, i, pathPos.x);
-
-								target.position = pathPos;
-
-								i = points.Count;
-							}
-						}
-					}
-				}
+				p = paths.Length;
 			}
 		}
 
-#if UNITY_EDITOR
+		if (activePathIndex == 9999)
+		{
+			if (targPhysics.landed) targPhysics.Fall ();
 
+			return;
+		}
+
+		// Position Target on Path
+
+		List<Vector3> points = paths[activePathIndex].points;
+
+		for (int i = 0; i < points.Count - 1; i++)
+		{
+			// Choose Segment
+
+			if (target.position.x > points[i].x && target.position.x < points[i + 1].x)
+			{
+				Vector3 pathPos = target.position;
+
+				if (targPhysics.Is_Falling ())
+				{
+					pathPos.y = Y_Value (points, i, pathPos.x);
+
+					if (Mathf.Abs (target.position.y - pathPos.y) <= pathRange)
+					{
+						target.position = pathPos;
+
+						targPhysics.Land ();
+					}
+
+					return;
+				}
+
+				if (targPhysics.Is_Jumping ())
+				{
+					return;
+				}
+				else if (targPhysics.landed)
+				{
+					pathPos.y = Y_Value (points, i, pathPos.x);
+
+					target.position = pathPos;
+
+					return;
+				}
+			}
+		}
+	}
+
+	private void Update ()
+	{
 		// Runtime Path Edit
 
-		if (edit)
-		{
-			if (previousIndex != pathIndex)
-			{
-				previousIndex = pathIndex;
+		if (!edit) return;
 
-				currEditPath = paths[pathIndex];
-			}
+		// Path Selection for Runtime Edit
+
+		if (previousIndex != editIndex)
+		{
+			previousIndex = editIndex;
+
+			currEditPath = paths[editIndex];
 		}
 
 		if (currEditPath != null)
 		{
+			// Update Edges
+
+			for (int o = 0; o < currEditPath.points.Count; o++)
+			{
+				if (currEditPath.points[o].x < currEditPath.leftEdge)
+				{
+					currEditPath.leftEdge = currEditPath.points[o].x;
+				}
+
+				if (currEditPath.points[o].x > currEditPath.rightEdge)
+				{
+					currEditPath.rightEdge = currEditPath.points[o].x;
+				}
+			}
+
+			// Edit Points
+
 			if (Input.GetMouseButton (0) || Input.GetMouseButton (1))
 			{
 				Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
@@ -177,7 +286,7 @@ public class PointPathHandler : MonoBehaviour
 				{
 					for (int p = 0; p < currEditPath.points.Count; p++)
 					{
-						if (Vector3.Magnitude (currEditPath.points[p] - mousePos) <= pathRange * 2)
+						if (Vector3.Magnitude (currEditPath.points[p] - mousePos) <= pathRange)
 						{
 							movingPoint = true;
 							currEditPoint = p;
@@ -192,7 +301,7 @@ public class PointPathHandler : MonoBehaviour
 
 					// Start Point
 
-					if (Vector3.Magnitude (currEditPath.points[0] - mousePos) <= pathRange * 2)
+					if (Vector3.Magnitude (currEditPath.points[0] - mousePos) <= pathRange)
 					{
 						movingPoint = true;
 
@@ -210,7 +319,7 @@ public class PointPathHandler : MonoBehaviour
 						currEditPoint = 0;
 						newPoint = true;
 					}
-					else if (Vector3.Magnitude (currEditPath.points[currEditPath.points.Count - 1] - mousePos) <= pathRange * 2)
+					else if (Vector3.Magnitude (currEditPath.points[currEditPath.points.Count - 1] - mousePos) <= pathRange)
 					{
 						// End Point
 
@@ -231,8 +340,6 @@ public class PointPathHandler : MonoBehaviour
 				if (newPoint) newPoint = false;
 			}
 		}
-
-#endif
 	}
 
 	private float Y_Value (List<Vector3> points, int segmentIndex, float xVal)
