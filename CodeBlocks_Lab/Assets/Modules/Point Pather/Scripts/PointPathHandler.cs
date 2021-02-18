@@ -30,11 +30,14 @@ public class PointPathHandler : MonoBehaviour
 
 	[Header ("Debug:")]
 
-	public bool debug;
+	public bool debugPath;
+	public bool debugPhysics;
+
+	public PointPath activePath;
 
 	private void OnDrawGizmos ()
 	{
-		if (debug)
+		if (debugPath)
 		{
 			if (paths.Length <= 0) return;
 
@@ -176,65 +179,125 @@ public class PointPathHandler : MonoBehaviour
 
 		// Get Active Path
 
-		int activePathIndex = 9999;
+		bool pathFound = false;
 
 		for (int p = 0; p < paths.Length; p++)
 		{
-			if (target.position.x > paths[p].leftEdge && target.position.x < paths[p].rightEdge)
-			{
-				activePathIndex = p;
+			PointPath currPath = paths[p];
 
-				p = paths.Length;
+			if (target.position.x > currPath.leftEdge && target.position.x < currPath.rightEdge)
+			{
+				for (int o = 0; o < currPath.points.Count; o++)
+				{
+					if (target.position.x > currPath.points[o].x && target.position.x < currPath.points[o + 1].x)
+					{
+						newPos.y = Y_Value (currPath.points, o, newPos.x);
+
+						if (Mathf.Abs (target.position.y - newPos.y) <= pathRange)
+						{
+							pathFound = true;
+
+							activePath = paths[p];
+
+							o = currPath.points.Count;
+							p = paths.Length;
+						}
+					}
+				}
 			}
 		}
 
-		if (activePathIndex == 9999)
+		if (!pathFound)
 		{
-			if (targPhysics.landed) targPhysics.Fall ();
+			if (targPhysics.grounded) targPhysics.UnGround ();
+
+			if (activePath) activePath = null;
 
 			return;
 		}
 
 		// Position Target on Path
 
-		List<Vector3> points = paths[activePathIndex].points;
-
-		for (int i = 0; i < points.Count - 1; i++)
+		if (targPhysics.grounded)
 		{
-			// Choose Segment
-
-			if (target.position.x > points[i].x && target.position.x < points[i + 1].x)
-			{
-				Vector3 pathPos = target.position;
-
-				if (targPhysics.Is_Falling ())
-				{
-					pathPos.y = Y_Value (points, i, pathPos.x);
-
-					if (Mathf.Abs (target.position.y - pathPos.y) <= pathRange)
-					{
-						target.position = pathPos;
-
-						targPhysics.Land ();
-					}
-
-					return;
-				}
-
-				if (targPhysics.Is_Jumping ())
-				{
-					return;
-				}
-				else if (targPhysics.landed)
-				{
-					pathPos.y = Y_Value (points, i, pathPos.x);
-
-					target.position = pathPos;
-
-					return;
-				}
-			}
+			target.position = newPos;
 		}
+		else if (!targPhysics.grounded)
+		{
+			if (targPhysics.Is_Rising ()) return;
+
+			if (debugPhysics)
+			{
+				Debug.Log ("Ground | Y Velocity: " + targPhysics.VelocityY ());
+			}
+
+			targPhysics.Land ();
+
+			target.position = newPos;
+		}
+
+		//int activePathIndex = 0;
+		//bool pathFound = false;
+
+		//for (int p = 0; p < paths.Length; p++)
+		//{
+		//	if (target.position.x > paths[p].leftEdge && target.position.x < paths[p].rightEdge)
+		//	{
+		//		activePathIndex = p;
+
+		//		p = paths.Length;
+
+		//		pathFound = true;
+		//	}
+		//}
+
+		//if (!pathFound)
+		//{
+		//	if (targPhysics.landed) targPhysics.Fall ();
+
+		//	return;
+		//}
+
+		//// Position Target on Path
+
+		//List<Vector3> points = paths[activePathIndex].points;
+
+		//for (int i = 0; i < points.Count - 1; i++)
+		//{
+		//	// Choose Segment
+
+		//	if (target.position.x > points[i].x && target.position.x < points[i + 1].x)
+		//	{
+		//		Vector3 pathPos = target.position;
+
+		//		if (targPhysics.Is_Falling ())
+		//		{
+		//			pathPos.y = Y_Value (points, i, pathPos.x);
+
+		//			if (Mathf.Abs (target.position.y - pathPos.y) <= pathRange)
+		//			{
+		//				target.position = pathPos;
+
+		//				targPhysics.Land ();
+		//			}
+
+		//			return;
+		//		}
+
+		//		if (targPhysics.Is_Jumping ())
+		//		{
+		//			return;
+		//		}
+		//		else if (targPhysics.landed)
+		//		{
+		//			pathPos.y = Y_Value (points, i, pathPos.x);
+
+		//			target.position = pathPos;
+
+		//			return;
+		//		}
+		//	}
+		//}
 	}
 
 	private void Update ()

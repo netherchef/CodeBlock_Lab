@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class PointPath_PlayerPhysics : MonoBehaviour
 {
+	// Components
+
 	private Rigidbody2D rb2d;
 
-	public bool landed;
+	[Header ("Variables:")]
+
+	public bool grounded;
+
+	//[Header ("Debug:")]
+
+	//public bool debug;
 
 	private void Start ()
 	{
@@ -15,17 +23,19 @@ public class PointPath_PlayerPhysics : MonoBehaviour
 
 	private void Update ()
 	{
-		if (Input.GetButtonDown ("Jump"))
+		if (Press_Jump ())
 		{
-			if (landed) Jump ();
+			if (grounded) Jump ();
 		}
 	}
 
-	private void Jump ()
+	public void Jump ()
 	{
-		Fall ();
+		UnGround ();
 
-		rb2d.AddForce (Vector2.up * 250f);
+		Vector3 newV = rb2d.velocity;
+		newV.y = 5f;
+		rb2d.velocity = newV;
 	}
 
 	public void Land ()
@@ -36,14 +46,14 @@ public class PointPath_PlayerPhysics : MonoBehaviour
 
 		rb2d.isKinematic = true;
 
-		landed = true;
+		grounded = true;
 	}
 
-	public void Fall ()
+	public void UnGround ()
 	{
 		rb2d.isKinematic = false;
 
-		landed = false;
+		grounded = false;
 	}
 
 	public bool Is_Falling ()
@@ -51,7 +61,17 @@ public class PointPath_PlayerPhysics : MonoBehaviour
 		return rb2d.velocity.y < 0;
 	}
 
-	public bool Is_Jumping ()
+	public bool Is_Rising ()
+	{
+		return rb2d.velocity.y > 0;
+	}
+
+	public float VelocityY ()
+	{
+		return rb2d.velocity.y;
+	}
+
+	public bool Press_Jump ()
 	{
 		return Input.GetButtonDown ("Jump");
 	}
