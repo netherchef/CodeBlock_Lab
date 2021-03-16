@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Modules/Point Pather/Point Pather Scene.unity
+- path: Assets/Modules/Walkman/Walkman.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

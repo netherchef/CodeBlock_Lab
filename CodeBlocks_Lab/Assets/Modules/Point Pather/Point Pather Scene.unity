@@ -150,7 +150,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c22167b4cca8482ba99f3f84cff27db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathName: New Path
   leftEdge: 0
   rightEdge: 0
   points:
@@ -201,7 +200,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c22167b4cca8482ba99f3f84cff27db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathName: Another Path
   leftEdge: 0
   rightEdge: 0
   points:
@@ -250,7 +248,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c22167b4cca8482ba99f3f84cff27db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathName: Another Path
   leftEdge: 0
   rightEdge: 0
   points:
@@ -301,12 +298,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c22167b4cca8482ba99f3f84cff27db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathName: Another Path
   leftEdge: -9.80843
-  rightEdge: -0.05513096
+  rightEdge: -0.08130884
   points:
-  - {x: -9.80843, y: -1.4570135, z: 0}
-  - {x: -0.08130884, y: -1.4643204, z: 0}
+  - {x: -7.974503, y: 0.57697034, z: 0}
+  - {x: -1.9797386, y: 0.3675464, z: 0}
 --- !u!4 &1607805955
 Transform:
   m_ObjectHideFlags: 0

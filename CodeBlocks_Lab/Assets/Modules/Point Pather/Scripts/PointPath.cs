@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PointPath : MonoBehaviour
 {
-	public string pathName = "PATHNAME";
-
 	[Header ("Edges:")]
 
 	public float leftEdge;
@@ -17,9 +15,6 @@ public class PointPath : MonoBehaviour
 
 	public void NoPoint ()
 	{
-		if (pathName != "")
-		{
-			Debug.LogWarning ("Path: [" + pathName + "] has NO Points.");
-		}
+		Debug.LogWarning ("Path: [" + transform.name + "] has NO Points.");
 	}
 }
