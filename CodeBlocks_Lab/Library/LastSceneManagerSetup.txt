@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Modules/Walkman/Walkman.unity
+- path: Assets/Modules/Jump Arch/Jump Arch Scene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

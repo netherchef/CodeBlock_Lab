@@ -7,11 +7,11 @@ using System.IO;
 
 public class JSONeer : MonoBehaviour
 {
-	// Components
+	[Header ("Scripts:")]
 
 	public DataContainer container;
 
-	// Variables
+	[Header ("Variables:")]
 
 	public string fileName = "DataList.json";
 	public bool check;
@@ -36,7 +36,7 @@ public class JSONeer : MonoBehaviour
 		{
 			write = false;
 
-			DataContainer_To_JSON ();
+			Write_DataContainer_To_JSON ();
 		}
 	}
 
@@ -79,7 +79,7 @@ public class JSONeer : MonoBehaviour
 
 	#region To JSON ____________________________________________________________
 
-	private void DataContainer_To_JSON ()
+	private void Write_DataContainer_To_JSON ()
 	{
 		// Define JSON file path
 

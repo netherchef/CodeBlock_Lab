@@ -19,15 +19,81 @@ public class Oscillator : MonoBehaviour
 
 	public bool oscillate;
 
+	private Vector3 startPos;
+	private float distance;
+	private Vector3 corePos;
+
+	[SerializeField]
+	private Vector3 endPos;
+	[SerializeField]
+	private bool resetPos;
+	[SerializeField]
+	private bool move;
+	[SerializeField]
+	private float moveSpeed = 1f;
+	[SerializeField]
+	private float archHeight = 2f;
+
 	// Enumerators
 
 	private IEnumerator do_Oscillate;
 
 	private void Start ()
 	{
-		if (oscillate)
+		//if (oscillate) Start_Oscillation ();
+
+		startPos = Vector3.zero;
+
+		corePos = target.position;
+	}
+
+	private void Update ()
+	{
+		if (move)
 		{
-			Start_Oscillation ();
+			Vector3 currPos = corePos;
+
+			if (Vector3.Distance (currPos, endPos) > 0.1f)
+			{
+				currPos += Vector3.Normalize (endPos - currPos) * moveSpeed * Time.deltaTime;
+			}
+
+			//if (endPos.x > startPos.x && currPos.x < endPos.x)
+			//{
+			//	currPos += Vector3.Normalize (endPos - currPos) * moveSpeed * Time.deltaTime;
+			//}
+			//else if (endPos.x < startPos.x && currPos.x > endPos.x)
+			//{
+			//	currPos += Vector3.Normalize (endPos - currPos) * moveSpeed * Time.deltaTime;
+			//}
+
+			corePos = currPos;
+		}
+
+		if (resetPos)
+		{
+			resetPos = false;
+			corePos = Vector3.zero;
+		}
+
+		if (Vector3.Distance (corePos, endPos) > 0)
+		{
+
+			// Calculate Jump Arch depending on the core's current position
+			// in relation with the distance between the Start and End positions.
+
+			distance = Vector3.Distance (startPos, endPos);
+			float amount = (Vector3.Distance (startPos, corePos) / distance) * 3.142f;
+
+			Vector3 tempPos = corePos;
+
+			// Apply Jump Arch modifier
+
+			tempPos.y += Mathf.Sin (amount) * archHeight;
+
+			// Apply the new position to the transform
+
+			target.position = tempPos;
 		}
 	}
 
